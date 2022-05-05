@@ -41,6 +41,7 @@ const carSchema = new Schema({
     //     type: String,
     //     required: true
     // },
+    
     carImages: [{ type: Schema.Types.ObjectId, ref: 'CarImage' }],
     carType: {
         type: Schema.Types.ObjectId,
