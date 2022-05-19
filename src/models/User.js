@@ -1,0 +1,32 @@
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true
+    },
+    password: {
+        type: String,
+        required: true,
+        minLength: 8,
+    },
+    is_superuser: {
+        type: Boolean,
+        default: false
+    },
+    passportData: {
+        type: Schema.Types.ObjectId,
+        ref: 'PassportData'
+    },
+    refreshToken: {
+        type: String
+    }
+});
+
+module.exports = mongoose.model('User', userSchema);

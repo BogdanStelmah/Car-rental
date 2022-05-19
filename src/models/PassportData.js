@@ -15,6 +15,13 @@ const passportDataSchema = new Schema({
         type: String,
         required: true
     },
+    address: {
+        type: String,
+    },
+    phoneNumber: {
+        type: String,
+        minLength: 12,
+    },
     authority: {
         type: String,
         required: true

@@ -54,4 +54,4 @@ const carSchema = new Schema({
     versionKey: false
 });
 
-module.exports = mongoose.Model('Car', carSchema);
+module.exports = mongoose.model('Car', carSchema);

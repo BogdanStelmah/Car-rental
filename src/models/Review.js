@@ -29,4 +29,4 @@ const reviewSchema = new Schema({
     versionKey: false
 });
 
-module.exports = mongoose.Model('Review', reviewSchema);s
+module.exports = mongoose.model('Review', reviewSchema);s

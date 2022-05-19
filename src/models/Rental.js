@@ -45,4 +45,4 @@ const rentalSchema = new Schema({
     versionKey: false
 });
 
-module.exports = mongoose.Model('Rental', rentalSchema);
+module.exports = mongoose.model('Rental', rentalSchema);

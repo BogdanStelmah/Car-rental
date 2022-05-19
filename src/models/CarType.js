@@ -12,9 +12,9 @@ const carTypeSchema = new Schema({
     description: {
         type: String,
         required: true,
-        maxlength: 100
+        maxlength: 400
     },
     versionKey: false
 });
 
-module.exports = mongoose.Model('CarType', carTypeSchema);
+module.exports = mongoose.model('CarType', carTypeSchema);

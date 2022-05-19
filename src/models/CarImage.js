@@ -10,4 +10,4 @@ const carImageSchema = new Schema({
     versionKey: false
 });
 
-module.exports = mongoose.Model('CarImage', carImageSchema);
+module.exports = mongoose.model('CarImage', carImageSchema);
