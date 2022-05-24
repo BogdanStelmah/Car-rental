@@ -1,54 +1,51 @@
 const express = require('express');
-
+const carTypeController = require('../controllers/carType');
+const { body } = require('express-validator');
 const CarType = require('../models/CarType');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-    CarType.find()
-        .then(carTypes => {
-            res.status(200).send(carTypes);
-        }).catch(error => {
-            res.status(500).send(error);
-        });
-});
+// GET /carType
+router.get('/', carTypeController.getCarTypes);
 
-router.get('/:carTypeId', (req, res, next) => {
-    const idCarType = req.params.carTypeId;
 
-    CarType.findById(idCarType)
-        .then(carType => {
-            res.status(200).send(carType);
+// GET /carType/:carTypeName
+router.get('/:idType',
+[
+    body('type')
+        .custom(async (value) => {
+            const carType = await CarType.findOne({type:value});
+            if (!carType) {
+                throw new Error('Даного типу не існує');
+            }
+        }),
+],
+carTypeController.getCarType);
+
+
+// POST /carType/:carTypeName
+router.post('/', auth,
+[
+    body('type')
+        .isLength({max: 20}).withMessage("Максимальна кількість букв має бути не більше 20")
+        .custom(async value => {
+            const carType = await CarType.findOne({ type: value });
+            if (carType) {
+                throw Error("Даний тип вже існує");
+            } else {
+                return value;
+            }
         })
-        .catch(error => {
-            res.status(500).send(error);
-        });
-});
+],
+carTypeController.postCarType);
 
-router.post('/', (req, res, next) => {
-    if(!req.body) return res.status(400);
 
-    const carType = CarType(req.body);
+// DELETE /carType/:carTypeName
+router.delete('/:idType', auth, carTypeController.deleteCarType);
 
-    carType.save()
-        .then(result => {
-            console.log(carType)
-            res.status(200).send(carType);
-        })
-        .catch(error => {
-            console.log(error)
-            res.status(500).send(error);
-        });
-});
 
-router.delete('/:carTypeId', (req, res, next) => {
-    CarType.findByIdAndDelete(req.params.carTypeId)
-        .then(result => {
-            res.status(200).send();
-        })
-        .catch(error => {
-            res.status(500).send()
-        })
-});
+// PUT /carType/:carTypeName
+router.put('/:idType', auth, carTypeController.putCarType);
 
 module.exports = router;

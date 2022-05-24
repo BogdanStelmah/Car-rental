@@ -5,7 +5,10 @@ const { validationResult } = require('express-validator');
 exports.getUsers = async (req, res, next) => {
     await User.find()
         .then(users => {
-            res.status(200).send(users)
+            res.status(200).json({
+                message: "Fetched posts successfully.",
+                users: users
+            })
         })
         .catch(error => {
             res.status(500).send(error);
@@ -35,7 +38,7 @@ exports.postLogin = async (req, res, next) => {
         if (!errors.isEmpty()) {
             return res.status(401).send(errors);
         }
-        
+
         const { email, password } = req.body;
         const userData = await userService.login(email, password);
 
