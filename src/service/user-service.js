@@ -3,11 +3,6 @@ const UserModel = require('../models/User');
 const tokenService = require('../service/token-servise');
 
 const registration = async (email, password) => {
-    const candidante = await UserModel.findOne({email});
-    if (candidante){
-        throw new Error('Користувач з таким поштовим адресов вже існує');
-    }
-
     const hashPassword = await bcrypt.hash(password, 8);
  
     const user = await UserModel.create({email: email, password: hashPassword});
@@ -19,16 +14,6 @@ const registration = async (email, password) => {
 
 const login = async (email, password) => {
     const user = await UserModel.findOne({email});
-
-    if (!user) {
-        throw new Error('Incorrect email');
-    }
-        
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        throw new Error('Incorrect password');
-    }
-
     const tokens = tokenService.generateTokens(user._id);
     await tokenService.saveToken(user._id, tokens.refreshToken);
 
@@ -47,7 +32,7 @@ const refresh = async(refreshToken) => {
     const userId = tokenService.validateRefreshToken(refreshToken);
     const token = await tokenService.findToken(refreshToken);
     if (!userId || !token){
-        throw Error("Помилка авотризації")
+        throw Error("Помилка авторизації")
     }
 
     const user = await UserModel.findById(userId);

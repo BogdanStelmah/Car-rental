@@ -3,7 +3,7 @@ const TokenModel = require('../models/Token');
 const jwt = require('jsonwebtoken');
 
 const generateTokens = (payload) => {
-    const accesToken = jwt.sign({_id: payload.toString()}, JWT_ACCESS_KEY, {expiresIn: '30s'});
+    const accesToken = jwt.sign({_id: payload.toString()}, JWT_ACCESS_KEY, {expiresIn: '30d'});
     const refreshToken = jwt.sign({_id: payload.toString()}, JWT_REFRESH_KEY, {expiresIn: '30d'});
 
     return {

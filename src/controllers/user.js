@@ -31,6 +31,11 @@ exports.postRegister = async (req, res, next) => {
 
 exports.postLogin = async (req, res, next) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(401).send(errors);
+        }
+        
         const { email, password } = req.body;
         const userData = await userService.login(email, password);
 
