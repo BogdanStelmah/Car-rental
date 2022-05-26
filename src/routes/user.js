@@ -2,6 +2,7 @@ const express = require('express');
 const userControllers = require('../controllers/user');
 const { body } = require('express-validator');
 const auth = require('../middleware/auth');
+const validationRes = require('../middleware/validationRes');
 const UserModel = require('../models/User');
 const bcrypt = require('bcrypt');
 
@@ -41,6 +42,7 @@ router.post('/register',
             }
         }),
 ],
+    validationRes,
     userControllers.postRegister
 );
 
@@ -71,7 +73,9 @@ router.post('/login',
             }  
         }),
 ],
-    userControllers.postLogin);
+    validationRes, 
+    userControllers.postLogin
+);
 
 // POST /users/logout
 router.post('/logout', userControllers.postLogout);
