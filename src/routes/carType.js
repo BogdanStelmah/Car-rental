@@ -31,6 +31,7 @@ carTypeController.getCarType);
 router.post('/', auth,
 [
     body('type')
+        .exists()
         .isLength({max: 20}).withMessage("Максимальна кількість букв має бути не більше 20")
         .custom(async value => {
             const carType = await CarType.findOne({ type: value });
@@ -41,6 +42,7 @@ router.post('/', auth,
             }
         }),
     body('description')
+        .exists()
         .isLength({max: 400}).withMessage("Максимальна кількість букв має бути не більше 400")
 ],
 validationRes,
