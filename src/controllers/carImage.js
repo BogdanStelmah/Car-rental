@@ -1,6 +1,7 @@
+const path = require('path');
 const CarImageModel = require('../models/CarImage');
-const { URL } = require('../utils/conf');
-const CarImageServise = require('../service/carImage-servise');
+const carImageService = require('../service/carImage-servise');
+const cloudinaryService = require('../service/cloudinary-servise')
 
 exports.getImages = async (req, res, next) => {
     try {
@@ -16,28 +17,37 @@ exports.getImages = async (req, res, next) => {
 
 exports.postImage = async (req, res, next) => {
     try {
-        if (!req.file) {
+        if (!(req.files?.length > 0)){
             throw Error("Відсутній файл");
         }
-        const imageUrl = req.file.path;
-        const carImage = CarImageModel({ imageLink: imageUrl });
-        await carImage.save(carImage);
+        if (!(req.files?.length === 1)){
+            throw Error("Оберіть тільки один файл");
+        }
+        for (const element of req.files){
+            const ext = path.extname(element.originalname);
+            if( ![".png", ".jpg", ".jpeg"].includes(ext) ){
+                throw Error("Будь ласка завантажте зображення PNG, JPG, JPEG");
+            }
+        }
+
+        const uploadedResponse = await cloudinaryService.uploadToCloudinary(req.files);
+        await carImageService.saveImagesToDB(uploadedResponse);
+
         res.status(201).json({
-            message: "Додано нове фото"
+            message: "Додано нове фото",
         })
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).json({ 'Error': error.message });
     }
 }
 
 exports.deleteImage = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const imagePath = await CarImageServise.deleteImage(id);
+        await carImageService.deleteImage(id);
 
         res.status(200).json({
-            message: "Картинку видалено",
-            image: imagePath
+            message: "Картинку видалено"
         })
     } catch (error) {
         res.status(500).send(error.message);

@@ -14,7 +14,9 @@ const auth = async (req, res, next) => {
 
         next();
     } catch (error) {
-        res.status(401).send("Будь ласка авторизуйтесь");
+        res.status(401).json({
+            "error": "Будь ласка, авторизуйтесь!"
+        });
     }
 }
 

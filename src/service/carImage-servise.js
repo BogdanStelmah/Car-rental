@@ -1,6 +1,26 @@
 const fs = require('fs');
 const path = require('path');
 const CarImageModel = require('../models/CarImage');
+const cloudinaryService = require('../service/cloudinary-servise');
+
+const saveImagesToDB = async (images) => {
+    try {
+        let imagesId = [];
+
+        for(const image of images) {
+            const carImage = CarImageModel({
+                imageLink: image.url,
+                cloudinaryId: image.public_id
+            });
+            await carImage.save(carImage);
+            imagesId.push(carImage._id);
+        }
+
+        return imagesId;
+    } catch (e) {
+        throw Error('Помилка збереження файлів')
+    }
+}
 
 const clearImageFromFolder = async (filePath) => {
     filePath = path.join(path.join(__dirname, '..', '..', path.normalize(filePath)));
@@ -14,9 +34,8 @@ const deleteImage = async (id) => {
     if (!image) {
         throw Error("Такої картинки не знайдено");
     }
-    await clearImageFromFolder(image.imageLink);
 
-    return image.imageLink;
+    cloudinaryService.deleteFromCloudinary(image);
 }
 
-module.exports = {clearImageFromFolder, deleteImage};
+module.exports = {clearImageFromFolder, deleteImage, saveImagesToDB};

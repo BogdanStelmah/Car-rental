@@ -42,7 +42,7 @@ exports.deleteCarType = async (req, res, next) => {
     try {
         const deletedCarType = await CarType.findByIdAndDelete(req.params.idType)
 
-        res.status(200).json({
+        res.status(204).json({
             message: "Machine type successfully deleted.",
             carType: deletedCarType
         });
@@ -58,7 +58,7 @@ exports.putCarType = async (req, res, next) => {
         update.forEach((update) => carType[update] = req.body[update]);
         await carType.save();
 
-        res.status(200).send(carType);
+        res.status(204);
     } catch (error) {
         res.status(500).send(error.message);
     }

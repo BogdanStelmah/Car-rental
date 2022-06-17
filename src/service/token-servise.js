@@ -1,10 +1,17 @@
-const { JWT_ACCESS_KEY, JWT_REFRESH_KEY } = require('../utils/conf');
+require('dotenv').config();
 const TokenModel = require('../models/Token');
 const jwt = require('jsonwebtoken');
 
 const generateTokens = (payload) => {
-    const accesToken = jwt.sign({_id: payload.toString()}, JWT_ACCESS_KEY, {expiresIn: '30d'});
-    const refreshToken = jwt.sign({_id: payload.toString()}, JWT_REFRESH_KEY, {expiresIn: '30d'});
+    const accesToken = jwt.sign({
+        _id: payload.toString()},
+        process.env.JWT_ACCESS_KEY,
+        {expiresIn: '30d'});
+
+    const refreshToken = jwt.sign({
+        _id: payload.toString()},
+        process.env.JWT_REFRESH_KEY,
+        {expiresIn: '30d'});
 
     return {
         accesToken,
@@ -20,8 +27,7 @@ const saveToken = async (userId, refreshToken) => {
         return await tokenData.save();
     }
 
-    const token = await TokenModel.create({user: userId, refreshToken});
-    return token;
+    return await TokenModel.create({user: userId, refreshToken});
 }
 
 const removeToken = async (refreshToken) => {
@@ -30,8 +36,7 @@ const removeToken = async (refreshToken) => {
 
 const validateAccesToken = (token) => {
     try {
-        const user = jwt.verify(token, JWT_ACCESS_KEY);
-        return user;
+        return jwt.verify(token, process.env.JWT_ACCESS_KEY);
     } catch (error) {
         return null;
     }
@@ -39,8 +44,7 @@ const validateAccesToken = (token) => {
 
 const validateRefreshToken = (token) => {
     try {
-        const user = jwt.verify(token, JWT_REFRESH_KEY);
-        return user;
+        return jwt.verify(token, process.env.JWT_REFRESH_KEY);
     } catch (error) {
         return null;
     }

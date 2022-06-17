@@ -7,6 +7,10 @@ const carImageSchema = new Schema({
         type: String,
         required: true
     },
+    cloudinaryId: {
+        type: String,
+        required: true
+    },
     versionKey: false
 });
 

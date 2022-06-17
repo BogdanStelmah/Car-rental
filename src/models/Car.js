@@ -14,13 +14,13 @@ const carSchema = new Schema({
     modelYear: {
         type: Number,
         required: true,
-        min: 1970,
-        max: 2022
+        min: new Date().getFullYear() - 80,
+        max: new Date().getFullYear()
     },
     description: {
         type: String,
         required: true,
-        maxlength: 100
+        maxlength: 500
     },
     color: {
         type: String,
@@ -32,10 +32,10 @@ const carSchema = new Schema({
         maxlength: 12
     },
     number: {
-        type: Number,
+        type: String,
         required: true,
         min: 1,
-        max: 30
+        max: 10
     },
     // rate: {
     //     type: String,

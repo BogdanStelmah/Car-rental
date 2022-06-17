@@ -25,7 +25,6 @@ router.post('/register',
             } else {
                 return value;
             }
-               
         }),
     body('password')
         .isLength({ min: 8 })
