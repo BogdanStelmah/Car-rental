@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+const connectionToDB = async () => {
+    await mongoose.connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+}
 
-module.exports = mongoose;
+module.exports = { connectionToDB };

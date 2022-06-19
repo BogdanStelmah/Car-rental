@@ -1,7 +1,8 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-require('./db/mongoose');
 require('dotenv').config();
+
+const { connectionToDB } = require('./db/mongoose');
 const upload = require('./utils/multer');
 
 const carTypeRoutes = require('./routes/carType');
@@ -21,6 +22,7 @@ app.use('/car', upload.any() ,carRoutes);
 
 const start = async () => {
     try {
+        await connectionToDB();
         app.listen(process.env.PORT, () => {
             console.log(`Server has been started on PORT = ${process.env.PORT}`);
         });

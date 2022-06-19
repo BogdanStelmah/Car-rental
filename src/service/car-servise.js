@@ -1,6 +1,7 @@
 const cloudinaryService = require("../service/cloudinary-servise");
 const carImageService = require("../service/carImage-servise");
 const carModel = require("../models/Car");
+const CarModel = require("../models/Car");
 
 const createCar = async (carData, carImages) => {
     const uploadedResponse = await cloudinaryService.uploadToCloudinary(carImages);
@@ -22,4 +23,23 @@ const createCar = async (carData, carImages) => {
     return newCar;
 }
 
-module.exports = { createCar }
+const updateCar = async (id, carData) => {
+    const car = await CarModel.findOne({ _id: id })
+
+    const update = [
+        'name',
+        'brand',
+        'modelYear',
+        'description',
+        'color',
+        'numberPeople',
+        'number',
+        'carType',
+        'status'
+    ];
+    update.forEach((update) => car[update] = carData[update]);
+
+    await car.save();
+}
+
+module.exports = { createCar, updateCar }

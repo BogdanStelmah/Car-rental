@@ -1,10 +1,13 @@
-const carModel = require('../models/Car');
+const CarModel = require('../models/Car');
+
 const path = require("path");
-const {createCar} = require("../service/carType-servise");
+
+const carService = require("../service/car-servise");
+const imageService = require('../service/carImage-servise');
 
 exports.getCars = async (req, res, next) => {
     try {
-        const cars = await carModel
+        const cars = await CarModel
             .find()
             .populate('carType')
             .populate('carImages');
@@ -30,10 +33,10 @@ exports.postCar = async (req, res, next) => {
             }
         }
 
-        const newCar = await createCar(req.body, req.files);
+        const newCar = await carService.createCar(req.body, req.files);
 
         res.status(201).json({
-            message: "Створено нову машину",
+            message: "Створено новий автомобіль",
             car: newCar
         });
     } catch (error) {
@@ -43,7 +46,11 @@ exports.postCar = async (req, res, next) => {
 
 exports.putCar = async (req, res, next) => {
     try {
-        res.status(500).send(error.message);
+        carService.updateCar(req.params.id, req.body);
+
+        res.status(200).json({
+            message: "Данні про автомобіль оновленно"
+        })
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -51,7 +58,15 @@ exports.putCar = async (req, res, next) => {
 
 exports.deleteCar = async (req, res, next) => {
     try {
-        res.status(500).send(error.message);
+        const car = await CarModel.findOneAndDelete({ _id: req.params.id });
+
+        for (const imageId of car.carImages) {
+            imageService.deleteImage(imageId);
+        }
+
+        res.status(500).json({
+            message: "Автомобіль видалено",
+        });
     } catch (error) {
         res.status(500).send(error.message);
     }
