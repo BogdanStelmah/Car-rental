@@ -4,17 +4,27 @@ const path = require("path");
 
 const carService = require("../service/car-servise");
 const imageService = require('../service/carImage-servise');
+const {queryParser} = require("../utils/queryParser");
 
 exports.getCars = async (req, res, next) => {
     try {
+        const { limit, skip, sort, filters } = await queryParser(req.query)
+
+        const count = await CarModel.countDocuments();
+        const totalPages = Math.ceil(count / limit);
         const cars = await CarModel
             .find()
+            .sort(sort)
+            .limit(limit)
+            .skip((skip -1 ) * limit)
             .populate('carType')
             .populate('carImages');
 
         res.status(200).json({
             message: "Fetched posts successfully.",
-            cars: cars
+            cars: cars,
+            page: skip,
+            totalPages: totalPages
         })
     } catch (error) {
         res.status(500).send(error.message);

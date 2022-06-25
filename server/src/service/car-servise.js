@@ -3,6 +3,7 @@ const carImageService = require("../service/carImage-servise");
 const carModel = require("../models/Car");
 const CarModel = require("../models/Car");
 
+
 const createCar = async (carData, carImages) => {
     const uploadedResponse = await cloudinaryService.uploadToCloudinary(carImages);
     const imagesId = await carImageService.saveImagesToDB(uploadedResponse);

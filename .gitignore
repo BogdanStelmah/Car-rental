@@ -1,5 +1,7 @@
-/node_modules/
+/server/node_modules/
 /.vscode/
-/images/
-.env
+/server/.env
 .idea/
+
+
+/client/

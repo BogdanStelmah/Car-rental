@@ -3,6 +3,7 @@ const { body, param } = require('express-validator');
 
 const carController = require('../controllers/car')
 const validationRes = require('../middleware/validationRes');
+const auth = require('../middleware/auth');
 
 const CarTypeModel = require("../models/CarType");
 const CarModel = require("../models/Car");
@@ -67,9 +68,15 @@ const checkBodyCar = () => [
         })
 ]
 
+// Pagination
+// GET /car?limit=&skip=
+// Sorting
+// GET /car?sort=-name,+brand
+// Filtration
+// GET /car?name=BMW
 router.get('/', carController.getCars);
 
-router.post('/', checkBodyCar(), validationRes, carController.postCar);
+router.post('/', auth, checkBodyCar(), validationRes, carController.postCar);
 
 router.put('/:id',
     checkExistCar(),
@@ -77,7 +84,7 @@ router.put('/:id',
     validationRes,
     carController.putCar);
 
-router.delete('/:id',
+router.delete('/:id', auth,
     checkExistCar(),
     validationRes,
     carController.deleteCar
