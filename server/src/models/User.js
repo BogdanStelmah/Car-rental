@@ -28,4 +28,12 @@ const userSchema = new Schema({
 },
 { timestamps: true });
 
+userSchema.statics.getTableFields = async () => {
+    return {
+        email: 'String',
+        password: 'String',
+        is_superuser: 'Boolean',
+    }
+}
+
 module.exports = mongoose.model('User', userSchema);

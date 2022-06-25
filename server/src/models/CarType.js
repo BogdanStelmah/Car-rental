@@ -17,4 +17,11 @@ const carTypeSchema = new Schema({
     versionKey: false
 });
 
+carTypeSchema.statics.getTableFields = async () => {
+    return {
+        type: 'String',
+        description: 'String'
+    }
+}
+
 module.exports = mongoose.model('CarType', carTypeSchema);

@@ -41,4 +41,17 @@ const passportDataSchema = new Schema({
     versionKey: false // __v
 });
 
+passportDataSchema.statics.getTableFields = async () => {
+    return {
+        firstname: 'String',
+        secondName: 'String',
+        lastname: 'String',
+        address: 'String',
+        phoneNumber: 'String',
+        authority: 'String',
+        birthdate: 'String',
+        imageLink: 'String',
+    }
+}
+
 module.exports = mongoose.model('PassportData', passportDataSchema);

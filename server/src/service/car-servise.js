@@ -27,17 +27,8 @@ const createCar = async (carData, carImages) => {
 const updateCar = async (id, carData) => {
     const car = await CarModel.findOne({ _id: id })
 
-    const update = [
-        'name',
-        'brand',
-        'modelYear',
-        'description',
-        'color',
-        'numberPeople',
-        'number',
-        'carType',
-        'status'
-    ];
+    const update = await CarModel.getTableFields();
+
     update.forEach((update) => car[update] = carData[update]);
 
     await car.save();

@@ -8,12 +8,13 @@ const {queryParser} = require("../utils/queryParser");
 
 exports.getCars = async (req, res, next) => {
     try {
-        const { limit, skip, sort, filters } = await queryParser(req.query)
+        const { limit, skip, sort, filters } = await queryParser(req.query, CarModel);
 
         const count = await CarModel.countDocuments();
         const totalPages = Math.ceil(count / limit);
+
         const cars = await CarModel
-            .find()
+            .find(filters)
             .sort(sort)
             .limit(limit)
             .skip((skip -1 ) * limit)
@@ -24,6 +25,7 @@ exports.getCars = async (req, res, next) => {
             message: "Fetched posts successfully.",
             cars: cars,
             page: skip,
+            totalCount: count,
             totalPages: totalPages
         })
     } catch (error) {
