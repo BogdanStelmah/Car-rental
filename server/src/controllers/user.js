@@ -1,6 +1,5 @@
 const User = require('../models/User');
 const userService = require('../service/user-service');
-const { validationResult } = require('express-validator');
 
 exports.getUsers = async (req, res, next) => {
     await User.find()
@@ -11,7 +10,7 @@ exports.getUsers = async (req, res, next) => {
             })
         })
         .catch(error => {
-            res.status(500).send(error);
+            next(error);
         });
 }
 
@@ -23,7 +22,7 @@ exports.postRegister = async (req, res, next) => {
         res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
         return res.json(userData);
     } catch (error) {
-        res.status(400).send(error.message);
+        next(error);
     }
 }
 
@@ -35,7 +34,7 @@ exports.postLogin = async (req, res, next) => {
         res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
         return res.json(userData);
     } catch (error) {
-        res.status(400).send(error.message);
+        next(error);
     }
 }
 
@@ -46,7 +45,7 @@ exports.postLogout = async (req, res, next) => {
         res.clearCookie('refreshToken');
         return res.status(200).send('Logout...');
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 }   
 
@@ -58,6 +57,6 @@ exports.getrefreshToken = async (req, res, next) => {
         res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
         return res.json(userData);
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 }

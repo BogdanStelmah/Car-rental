@@ -37,11 +37,12 @@ const carSchema = new Schema({
         min: 1,
         max: 10
     },
-    // rate: {
-    //     type: String,
-    //     required: true
-    // },
-    
+    rating: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 5
+    },
     carImages: [{ type: Schema.Types.ObjectId, ref: 'CarImage' }],
     carType: {
         type: Schema.Types.ObjectId,

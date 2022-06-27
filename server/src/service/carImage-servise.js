@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const CarImageModel = require('../models/CarImage');
 const cloudinaryService = require('../service/cloudinary-servise');
+const CustomError = require("../exceptions/custom-error");
 
 const saveImagesToDB = async (images) => {
     try {
@@ -18,7 +19,7 @@ const saveImagesToDB = async (images) => {
 
         return imagesId;
     } catch (e) {
-        throw Error('Помилка збереження файлів')
+        throw CustomError.FilesError('Помилка збереження файлів');
     }
 }
 
@@ -32,7 +33,7 @@ const clearImageFromFolder = async (filePath) => {
 const deleteImage = async (id) => {
     const image = await CarImageModel.findByIdAndDelete({ _id: id });
     if (!image) {
-        throw Error("Такої картинки не знайдено");
+        throw CustomError.FilesError("Такої картинки не знайдено");
     }
 
     cloudinaryService.deleteFromCloudinary(image);

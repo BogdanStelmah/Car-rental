@@ -1,15 +1,20 @@
 const express = require('express');
 const { body, param } = require('express-validator');
 
-const carController = require('../controllers/car')
+const carController = require('../controllers/car');
+const reviewController = require("../controllers/review");
+
 const validationRes = require('../middleware/validationRes');
-const auth = require('../middleware/auth');
+const authMiddleware = require('../middleware/auth');
+const rolesMiddleware = require('../middleware/role');
 
 const CarTypeModel = require("../models/CarType");
 const CarModel = require("../models/Car");
+const ReviewModel = require("../models/Review");
 
 const router = express.Router();
 
+//Checking the availability of the car
 const checkExistCar = () => [
     param('id')
         .isMongoId().withMessage('Невірний формат id')
@@ -22,6 +27,7 @@ const checkExistCar = () => [
         })
 ]
 
+//Query body validation for the car
 const checkBodyCar = () => [
     body('name')
         .exists()
@@ -76,18 +82,80 @@ const checkBodyCar = () => [
 // GET /car?name=BMW
 router.get('/', carController.getCars);
 
-router.post('/', auth, checkBodyCar(), validationRes, carController.postCar);
+//POST /car
+router.post('/', authMiddleware, rolesMiddleware,
+    checkBodyCar(),
+    validationRes,
+    carController.postCar);
 
-router.put('/:id',
+//PUT /car/:id
+router.put('/:id', authMiddleware, rolesMiddleware,
     checkExistCar(),
     checkBodyCar(),
     validationRes,
     carController.putCar);
 
-router.delete('/:id', auth,
+//DELETE /car/:id
+router.delete('/:id', authMiddleware, rolesMiddleware,
     checkExistCar(),
     validationRes,
     carController.deleteCar
+);
+
+// GET /car/:id/review
+router.get('/:id/review',
+    [
+        param('id')
+            .isMongoId().withMessage("Невірний формат id")
+            .custom(async (value) => {
+                const car = await CarModel.findOne({_id:value});
+                if (!car) {
+                    throw new Error('Даного автомобіля не існує');
+                }
+                return value;
+            }),
+    ],
+    validationRes,
+    reviewController.getCarReviews
+);
+
+// POST /car/:id/review
+router.post('/:id/review', authMiddleware,
+    [
+        body('content')
+            .exists()
+            .isLength({max: 100}).withMessage("Максимальна кількість букв має бути не більше 100"),
+        body('rating')
+            .isInt({ min: 1, max: 5 }).withMessage("Рейтинг повинен бути числом від 0 до 5"),
+        param('id')
+            .isMongoId().withMessage("Невірний формат id")
+            .custom(async (value) => {
+                const car = await CarModel.findOne({_id:value});
+                if (!car) {
+                    throw new Error('Даного автомобіля не існує');
+                }
+                return car;
+            }),
+    ],
+    validationRes,
+    reviewController.postReview
+);
+
+// DELETE /car/review/:idReview
+router.delete('/review/:idReview', authMiddleware,
+    [
+        param('idReview')
+            .isMongoId().withMessage("Невірний формат id")
+            .custom(async (value) => {
+                const review = await ReviewModel.findOne({_id:value});
+                if (!review) {
+                    throw new Error('Даного коментраря не існує');
+                }
+                return value;
+            }),
+    ],
+    validationRes,
+    reviewController.deleteReview
 );
 
 module.exports = router;

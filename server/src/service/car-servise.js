@@ -1,8 +1,13 @@
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+
+//Services
 const cloudinaryService = require("../service/cloudinary-servise");
 const carImageService = require("../service/carImage-servise");
-const carModel = require("../models/Car");
-const CarModel = require("../models/Car");
 
+//Models
+const CarModel = require("../models/Car");
+const ReviewModel = require("../models/Review")
 
 const createCar = async (carData, carImages) => {
     const uploadedResponse = await cloudinaryService.uploadToCloudinary(carImages);
@@ -34,4 +39,26 @@ const updateCar = async (id, carData) => {
     await car.save();
 }
 
-module.exports = { createCar, updateCar }
+const updateCarRating = async (id) => {
+    const avgRating = await ReviewModel.aggregate([
+        {
+            $match: {
+                'car': ObjectId(id)
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                avgReviews: {
+                    $avg: "$rating"
+                }
+            }
+        }
+    ]);
+    const car = await CarModel.findOne({ _id: id })
+    car.rating = avgRating[0].avgReviews.toFixed(1)
+
+    await car.save();
+}
+
+module.exports = { createCar, updateCar, updateCarRating };

@@ -1,17 +1,20 @@
 const express = require('express');
 const userControllers = require('../controllers/user');
-const { body } = require('express-validator');
+const { body, param} = require('express-validator');
 const auth = require('../middleware/auth');
 const validationRes = require('../middleware/validationRes');
 const UserModel = require('../models/User');
 const bcrypt = require('bcrypt');
+const authMiddleware = require("../middleware/auth");
+const rolesMiddleware = require("../middleware/role");
+const reviewController = require("../controllers/review");
 
 const router = express.Router();
 
-// GET /users
+// GET /user
 router.get('/', auth, userControllers.getUsers);
 
-// POST /users/register
+// POST /user/register
 router.post('/register',
 [
     body('email')
@@ -45,7 +48,7 @@ router.post('/register',
     userControllers.postRegister
 );
 
-// POST /users/login
+// POST /user/login
 router.post('/login', 
 [
     body('email')
@@ -76,10 +79,30 @@ router.post('/login',
     userControllers.postLogin
 );
 
-// POST /users/logout
+// POST /user/logout
 router.post('/logout', userControllers.postLogout);
 
-// GET /users/refresh
+// GET /user/refresh
 router.get('/refresh', userControllers.getrefreshToken);
+
+// GET /user/:userId/review
+router.get('/:userId/review',
+    [
+        param('userId')
+            .isMongoId().withMessage("Невірний формат id")
+            .custom(async (value) => {
+                const user = await UserModel.findOne({_id:value});
+                if (!user) {
+                    throw new Error('Даного користувача не існує');
+                }
+                return value;
+            }),
+    ],
+    validationRes,
+    authMiddleware, rolesMiddleware, reviewController.getUserReviews
+);
+
+// GET /user/myComments
+router.get('/myComments', authMiddleware, reviewController.getMyComments);
 
 module.exports = router;

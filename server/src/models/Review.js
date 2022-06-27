@@ -14,10 +14,6 @@ const reviewSchema = new Schema({
         min: 0,
         max: 5
     },
-    date: {
-        type: Date,
-        // default: new Date().toLocaleDateString()
-    },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -26,7 +22,6 @@ const reviewSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Car'
     },
-    versionKey: false
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('Review', reviewSchema);s
+module.exports = mongoose.model('Review', reviewSchema);

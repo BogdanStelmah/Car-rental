@@ -1,9 +1,10 @@
 const { validationResult } = require("express-validator");
+const CustomError = require("../exceptions/custom-error");
 
 module.exports = function (req, res, next) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(500).json(errors);
+        next(CustomError.BadRequestError('Помилка валідації', errors.array()));
     }
     next();
 };

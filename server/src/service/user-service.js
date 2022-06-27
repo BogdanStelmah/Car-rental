@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/User');
 const tokenService = require('../service/token-servise');
+const CustomError = require("../exceptions/custom-error");
 
 const registration = async (email, password) => {
     const hashPassword = await bcrypt.hash(password, 8);
@@ -26,7 +27,7 @@ const logout = async(refreshToken) => {
 
 const refresh = async(refreshToken) => {
     if (!refreshToken){
-        throw Error("Користувач неавторизований");
+        throw CustomError.UnauthorizedError();
     }
 
     const userId = tokenService.validateRefreshToken(refreshToken);

@@ -1,10 +1,16 @@
 const CarModel = require('../models/Car');
 
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+
+
 const path = require("path");
 
 const carService = require("../service/car-servise");
 const imageService = require('../service/carImage-servise');
 const {queryParser} = require("../utils/queryParser");
+const CustomError = require("../exceptions/custom-error");
+const ReviewModel = require("../models/Review");
 
 exports.getCars = async (req, res, next) => {
     try {
@@ -29,19 +35,19 @@ exports.getCars = async (req, res, next) => {
             totalPages: totalPages
         })
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 };
 
 exports.postCar = async (req, res, next) => {
     try {
         if (!(req.files?.length > 0)){
-            throw Error("Відсутні файли");
+            throw CustomError.FilesError('Відсутні файли');
         }
         for (const element of req.files){
             const ext = path.extname(element.originalname);
             if( ![".png", ".jpg", ".jpeg"].includes(ext) ){
-                throw Error("Будь ласка завантажте зображення PNG, JPG, JPEG");
+                throw CustomError.FilesError('Будь ласка завантажте зображення PNG, JPG, JPEG');
             }
         }
 
@@ -52,7 +58,7 @@ exports.postCar = async (req, res, next) => {
             car: newCar
         });
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 };
 
@@ -64,7 +70,7 @@ exports.putCar = async (req, res, next) => {
             message: "Данні про автомобіль оновленно"
         })
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 };
 
@@ -80,7 +86,7 @@ exports.deleteCar = async (req, res, next) => {
             message: "Автомобіль видалено",
         });
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 };
 

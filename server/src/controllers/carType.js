@@ -23,7 +23,7 @@ exports.getCarType = async (req, res, next) => {
             carType: cartype
         })
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 } 
 
@@ -34,7 +34,7 @@ exports.postCarType = async (req, res, next) => {
         await carType.save()
         res.status(201).send(carType);
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 }
 
@@ -47,7 +47,7 @@ exports.deleteCarType = async (req, res, next) => {
             carType: deletedCarType
         });
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 } 
 
@@ -60,6 +60,6 @@ exports.putCarType = async (req, res, next) => {
 
         res.status(204);
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error);
     }
 } 
