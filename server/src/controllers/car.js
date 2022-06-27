@@ -1,16 +1,11 @@
 const CarModel = require('../models/Car');
 
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
-
-
 const path = require("path");
 
 const carService = require("../service/car-servise");
 const imageService = require('../service/carImage-servise');
 const {queryParser} = require("../utils/queryParser");
 const CustomError = require("../exceptions/custom-error");
-const ReviewModel = require("../models/Review");
 
 exports.getCars = async (req, res, next) => {
     try {
