@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
+const cors = require('cors')
 
 const { connectionToDB } = require('./db/mongoose');
 const upload = require('./utils/multer');
@@ -16,6 +17,11 @@ const app = express();
 
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
+app.use(cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL
+}))
+
 
 app.use('/carType', carTypeRoutes);
 app.use('/user', userRoutes);
