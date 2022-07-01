@@ -10,8 +10,11 @@ const carTypeRoutes = require('./routes/carType');
 const userRoutes = require('./routes/user');
 const carImageRoutes = require('./routes/carImage');
 const carRoutes = require('./routes/car');
+const dbRoutes = require('./routes/db-routes');
 
 const errorMiddleware = require('./middleware/error');
+
+require('./utils/schedule')();
 
 const app = express();
 
@@ -27,6 +30,7 @@ app.use('/carType', carTypeRoutes);
 app.use('/user', userRoutes);
 app.use('/carImage', upload.any() ,carImageRoutes);
 app.use('/car', upload.any(), carRoutes);
+app.use('/mongo/restore', dbRoutes);
 
 app.use(errorMiddleware);
 

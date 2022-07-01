@@ -15,16 +15,9 @@ const passportDataSchema = new Schema({
         type: String,
         required: true
     },
-    address: {
-        type: String,
-    },
     phoneNumber: {
         type: String,
         minLength: 12,
-    },
-    authority: {
-        type: String,
-        required: true
     },
     sex: {
         type: String,
@@ -46,9 +39,7 @@ passportDataSchema.statics.getTableFields = async () => {
         firstname: 'String',
         secondName: 'String',
         lastname: 'String',
-        address: 'String',
         phoneNumber: 'String',
-        authority: 'String',
         birthdate: 'String',
         imageLink: 'String',
     }
