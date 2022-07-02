@@ -1,15 +1,24 @@
-import $api from "../http";
+import $api, {API_URL} from "../http";
+import axios from "axios";
 
 export default class AuthService {
     static async login(email, password) {
-        return await $api.post('user/login', {email, password});
+        const response = await $api.post('user/login', {email, password});
+        await localStorage.setItem('token', response.data.user.accesToken);
+        return response;
     }
 
-     static async registration(email, password) {
-         return $api.post('user/registration', {email, password});
-     }
+    static async registration(email, password) {
+        return await $api.post('user/registration', {email, password});
+    }
 
-     static async logout() {
-         return $api.post('user/logout');
-     }
+    static async logout() {
+        return await $api.post('user/logout');
+    }
+
+    static async checkAuth() {
+        const response = await axios.get(`${API_URL}/user/refresh`, { withCredentials: true });
+        await localStorage.setItem('token', response.data.user.accesToken);
+        return response;
+    }
  }

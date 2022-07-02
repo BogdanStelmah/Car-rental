@@ -24,7 +24,7 @@ router.post('/register',
         .custom(async value => {
             const user = await UserModel.findOne({ email: value });
             if (user) {
-                throw Error("Даний email вже занятий");
+                throw Error("Даний email вже зайнятий");
             } else {
                 return value;
             }
@@ -58,20 +58,16 @@ router.post('/login',
         .custom(async (value) => {
             const user = await UserModel.findOne({email:value});
             if (!user) {
-                throw new Error('Невірний email або пароль');
+                throw new Error('Неправильний email або пароль');
             }
         }),
     body('password')
-        .isLength({ min: 8 })
-        .withMessage("Мінімальний розмір паролю 8 символів")
-        .isLength({ max: 32 })
-        .withMessage("Максимальна довжина паролю 32 символи")
         .trim()
         .custom(async (value, {req}) => {
             const user = await UserModel.findOne({email: req.body.email});
             const isMatch = await bcrypt.compare(value, user.password);
             if (!isMatch) {
-                throw new Error('Невірний email або пароль');
+                throw new Error('Неправильний email або пароль');
             }  
         }),
 ],

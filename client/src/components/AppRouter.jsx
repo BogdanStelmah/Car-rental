@@ -11,9 +11,6 @@ const AppRouter = () => {
         !isAuth
             ?
             <Routes>
-                <Route path='/' element={<Admin/>}>
-
-                </Route>
                 {authRouters.map(({path, Component}) =>
                     <Route
                         key={path}
@@ -22,7 +19,7 @@ const AppRouter = () => {
                         exact
                     />
                 )}
-                <Route path='*' element={<Navigate to='/' replace />}>
+                <Route path='*' element={<Navigate to='/login' replace />}>
 
                 </Route>
             </Routes>

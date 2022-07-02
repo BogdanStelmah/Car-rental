@@ -6,7 +6,7 @@ const generateTokens = (payload) => {
     const accesToken = jwt.sign({
         _id: payload.toString()},
         process.env.JWT_ACCESS_KEY,
-        {expiresIn: '30d'});
+        {expiresIn: '10m'});
 
     const refreshToken = jwt.sign({
         _id: payload.toString()},
