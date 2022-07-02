@@ -1,19 +1,20 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+require('dotenv').config();
 
 //Services
 const cloudinaryService = require("../service/cloudinary-servise");
-const carImageService = require("../service/carImage-servise");
+const carImageService = require("./image-servise");
 
 //Models
 const CarModel = require("../models/Car");
 const ReviewModel = require("../models/Review")
 
 const createCar = async (carData, carImages) => {
-    const uploadedResponse = await cloudinaryService.uploadToCloudinary(carImages);
+    const uploadedResponse = await cloudinaryService.uploadToCloudinary(carImages, process.env.UPLOAD_PRESET_FOR_CAR_IMAGES);
     const imagesId = await carImageService.saveImagesToDB(uploadedResponse);
 
-    const newCar = new carModel({
+    const newCar = new CarModel({
         name: carData.name,
         brand: carData.brand,
         modelYear: carData.modelYear,
@@ -22,6 +23,7 @@ const createCar = async (carData, carImages) => {
         numberPeople: carData.numberPeople,
         number: carData.number,
         carImages: imagesId,
+
         carType: carData.carType
     })
     await newCar.save();

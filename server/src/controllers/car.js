@@ -3,7 +3,7 @@ const CarModel = require('../models/Car');
 const path = require("path");
 
 const carService = require("../service/car-servise");
-const imageService = require('../service/carImage-servise');
+const imageService = require('../service/image-servise');
 const {queryParser} = require("../utils/queryParser");
 const CustomError = require("../exceptions/custom-error");
 

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const CarImageModel = require('../models/CarImage');
+const ImageModel = require('../models/Image');
 const cloudinaryService = require('../service/cloudinary-servise');
 const CustomError = require("../exceptions/custom-error");
 
@@ -9,12 +9,12 @@ const saveImagesToDB = async (images) => {
         let imagesId = [];
 
         for(const image of images) {
-            const carImage = CarImageModel({
+            const newImage = ImageModel({
                 imageLink: image.url,
                 cloudinaryId: image.public_id
             });
-            await carImage.save(carImage);
-            imagesId.push(carImage._id);
+            await newImage.save(newImage);
+            imagesId.push(newImage._id);
         }
 
         return imagesId;
@@ -31,7 +31,7 @@ const clearImageFromFolder = async (filePath) => {
 }
 
 const deleteImage = async (id) => {
-    const image = await CarImageModel.findByIdAndDelete({ _id: id });
+    const image = await ImageModel.findByIdAndDelete({ _id: id });
     if (!image) {
         throw CustomError.FilesError("Такої картинки не знайдено");
     }

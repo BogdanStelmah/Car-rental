@@ -76,7 +76,7 @@ router.put('/:idType', auth,
                 throw Error('Даного типу не існує');
             } else {
                 const duplicateCarType = await CarType.findOne({type: req.body.type});
-                if (duplicateCarType){
+                if (duplicateCarType && duplicateCarType.type !== carType.type){
                     throw Error('Такий тип вже існує');
                 }
             }

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const carImageSchema = new Schema({
+const imageSchema = new Schema({
     imageLink: {
         type: String,
         required: true
@@ -14,11 +14,11 @@ const carImageSchema = new Schema({
     versionKey: false
 });
 
-carImageSchema.statics.getTableFields = async () => {
+imageSchema.statics.getTableFields = async () => {
     return {
         imageLink: 'String',
         cloudinaryId: 'String'
     }
 }
 
-module.exports = mongoose.model('CarImage', carImageSchema);
+module.exports = mongoose.model('Image', imageSchema);

@@ -44,7 +44,6 @@ exports.deleteCarType = async (req, res, next) => {
 
         res.status(204).json({
             message: "Machine type successfully deleted.",
-            carType: deletedCarType
         });
     } catch (error) {
         next(error);
@@ -58,7 +57,9 @@ exports.putCarType = async (req, res, next) => {
         update.forEach((update) => carType[update] = req.body[update]);
         await carType.save();
 
-        res.status(204);
+        res.status(204).json({
+            message: "Данні про тип оновленно"
+        });
     } catch (error) {
         next(error);
     }

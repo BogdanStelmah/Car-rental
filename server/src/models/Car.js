@@ -40,10 +40,11 @@ const carSchema = new Schema({
     rating: {
         type: Number,
         required: true,
+        default: 0,
         min: 0,
         max: 5
     },
-    carImages: [{ type: Schema.Types.ObjectId, ref: 'CarImage' }],
+    carImages: [{ type: Schema.Types.ObjectId, ref: 'Image' }],
     carType: {
         type: Schema.Types.ObjectId,
         ref: 'CarType'

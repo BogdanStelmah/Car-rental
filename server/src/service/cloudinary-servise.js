@@ -1,14 +1,14 @@
 const {cloudinary} = require("../utils/cloudinary");
 require('dotenv').config()
 
-const uploadToCloudinary = async (files) => {
+const uploadToCloudinary = async (files, directoryName) => {
     const resultUploaded = [];
 
     for (const file of files) {
         const uploadedResponse = await cloudinary.uploader.upload(
             file.path,
             {
-                upload_preset: process.env.UPLOAD_PRESET_FOR_CAR_IMAGES
+                upload_preset: directoryName
             }
         )
         resultUploaded.push(uploadedResponse);

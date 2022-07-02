@@ -1,8 +1,14 @@
 const path = require('path');
-const CarImageModel = require('../models/CarImage');
-const carImageService = require('../service/carImage-servise');
-const cloudinaryService = require('../service/cloudinary-servise')
 const CustomError = require("../exceptions/custom-error");
+require('dotenv').config();
+
+//Models
+const CarImageModel = require('../models/Image');
+
+//Services
+const carImageService = require('../service/image-servise');
+const cloudinaryService = require('../service/cloudinary-servise')
+
 
 exports.getImages = async (req, res, next) => {
     try {
@@ -31,7 +37,7 @@ exports.postImage = async (req, res, next) => {
             }
         }
 
-        const uploadedResponse = await cloudinaryService.uploadToCloudinary(req.files);
+        const uploadedResponse = await cloudinaryService.uploadToCloudinary(req.files, process.env.UPLOAD_PRESET_FOR_CAR_IMAGES);
         await carImageService.saveImagesToDB(uploadedResponse);
 
         res.status(201).json({

@@ -27,11 +27,7 @@ const passportDataSchema = new Schema({
         type: String,
         required: true
     },
-    imageLink: {
-        type: String,
-        required: true
-    },
-    versionKey: false // __v
+    imageLink: [{ type: Schema.Types.ObjectId, ref: 'Image' }],
 });
 
 passportDataSchema.statics.getTableFields = async () => {
