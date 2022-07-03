@@ -5,8 +5,19 @@ export const login = createAsyncThunk(
     'auth/login',
     async function({ email, password }, { rejectWithValue }) {
         try {
-            const response = await AuthService.login(email, password);
-            return response;
+            return await AuthService.login(email, password);
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.errors[0]?.msg);
+        }
+    }
+)
+
+export const register = createAsyncThunk(
+    'auth/register',
+    async function({ email, password, confPassword }, { rejectWithValue }) {
+        try {
+            console.log(email, password,confPassword)
+            return await AuthService.registration(email, password, confPassword);
         } catch (error) {
             return rejectWithValue(error.response?.data?.errors[0]?.msg);
         }
@@ -17,8 +28,7 @@ export const checkAuth = createAsyncThunk(
     'auth/checkAuth',
     async function(_, {rejectWithValue}){
         try {
-            const response = await AuthService.checkAuth();
-            return response
+            return await AuthService.checkAuth()
         } catch (error) {
             return rejectWithValue(error.response?.data?.errors[0]?.msg);
         }
@@ -65,6 +75,7 @@ const authSlice = createSlice({
             state.authenticated = false;
             state.user = {}
         },
+
         [checkAuth.pending]: (state, action) => {},
         [checkAuth.fulfilled]: (state, action) => {
             state.authenticated = true;
@@ -74,14 +85,26 @@ const authSlice = createSlice({
             state.authenticated = false;
             state.user = {}
         },
+
         [logout.fulfilled]: (state, action) => {
             state.authenticated = false;
             state.user = {}
-        }
+        },
+
+        [register.rejected]: (state, action) => {
+            state.error = action.payload;
+            state.authenticated = false;
+            state.user = {}
+        },
+
+        [register.fulfilled]: (state, action) => {
+            state.authenticated = true;
+            state.user = action.payload?.data?.user;
+        },
     }
 })
 
 export default authSlice.reducer;
-export const {authenticatedTrue, authenticatedFalse, authUser, errorNull} = authSlice.actions;
+export const { authUser, errorNull } = authSlice.actions;
 
 

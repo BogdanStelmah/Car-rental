@@ -8,8 +8,10 @@ export default class AuthService {
         return response;
     }
 
-    static async registration(email, password) {
-        return await $api.post('user/registration', {email, password});
+    static async registration(email, password, confirmPassword) {
+        const response =await $api.post('user/register', {email, password, confirmPassword});
+        await localStorage.setItem('token', response.data.user.accesToken);
+        return response;
     }
 
     static async logout() {
