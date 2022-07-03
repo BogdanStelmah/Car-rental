@@ -1,0 +1,125 @@
+import React from 'react';
+import {useDispatch, useSelector} from "react-redux";
+
+import {logout} from "../../toolKitRedux/authSlice";
+
+import {
+    UserOutlined,
+    LogoutOutlined,
+    CarOutlined,
+    SnippetsOutlined,
+    HighlightOutlined,
+    UnorderedListOutlined,
+    FileImageOutlined,
+    FormatPainterOutlined,
+    DatabaseOutlined,
+
+} from '@ant-design/icons';
+
+import {Avatar, Layout, Menu} from 'antd';
+
+import classes from "./Admin.module.css";
+import {Outlet, useNavigate} from "react-router-dom";
+import {CAR_ROUTER, USERS_ROUTER} from "../../components/utils/consts";
+
+const { Header, Content, Sider } = Layout;
+
+const Admin = () => {
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.auth.user);
+
+    const logOut = (e) => {
+        dispatch(logout())
+    }
+
+    let navigate = useNavigate();
+
+    return (
+        <Layout
+            style={{
+                height: '100%'
+            }}
+        >
+            <Sider
+                breakpoint="lg"
+                collapsedWidth="0"
+                onBreakpoint={(broken) => {
+                    console.log(broken);
+                }}
+                onCollapse={(collapsed, type) => {
+                    console.log(collapsed, type);
+                }}
+            >
+                <div className="logo"/>
+                    <div className={classes.logo}>
+                        CarRental
+                    </div>
+                <div/>
+                <Menu
+                    theme="dark"
+                    mode="inline"
+                    defaultSelectedKeys={['2']}
+                >
+                    <Menu.Item key={1} onClick={() => {navigate(USERS_ROUTER)}}>
+                        <UserOutlined/> Користувачі
+                    </Menu.Item>
+                    <Menu.Item key={2} onClick={() => {navigate(CAR_ROUTER)}}>
+                        <CarOutlined /> Автомобілі
+                    </Menu.Item>
+                    <Menu.Item key={3}>
+                        <FormatPainterOutlined /> Типи автомобілів
+                    </Menu.Item>
+                    <Menu.Item key={4}>
+                        <FileImageOutlined /> Картинки
+                    </Menu.Item>
+                    <Menu.Item key={5}>
+                        <DatabaseOutlined /> DB Tools
+                    </Menu.Item>
+                    <Menu.Item key={6}>
+                        <UnorderedListOutlined /> Замовлення
+                    </Menu.Item>
+                    <Menu.Item key={7}>
+                        <HighlightOutlined /> Відгуки
+                    </Menu.Item>
+                    <Menu.Item key={8}>
+                        <SnippetsOutlined />Паспортні данні
+                    </Menu.Item>
+                    <Menu.Item onClick={logOut} key={9}>
+                        <LogoutOutlined/> Вихід
+                    </Menu.Item>
+                </Menu>
+            </Sider>
+            <Layout>
+                <Header
+                    className="siteLayoutSubHeaderBackground"
+                    style={{
+                        padding: 0,
+                        background: "#3f3f3f",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                    }}
+                >
+                    <div className={classes.email_user}>{user.email}</div>
+                    <Avatar style={{backgroundColor: '#07bdc9', marginRight: '10px'}} icon={<UserOutlined/>}/>
+                </Header>
+                <Content
+                    style={{
+                        margin: '24px 16px 0',
+                    }}
+                >
+                    <div
+                        className="site-layout-background"
+                        style={{
+                            padding: 24,
+                        }}
+                    >
+                        <Outlet />
+                    </div>
+                </Content>
+            </Layout>
+        </Layout>
+    );
+};
+
+export default Admin;

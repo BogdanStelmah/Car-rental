@@ -1,7 +1,9 @@
-import {ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE} from "../components/utils/consts";
-import Admin from "../pages/Admin";
+import {ADMIN_ROUTE, CAR_ROUTER, LOGIN_ROUTE, REGISTRATION_ROUTE, USERS_ROUTER} from "../components/utils/consts";
+import Admin from "../pages/Home/Admin";
 import Login from "../pages/Login";
 import Registration from "../pages/Registration";
+import CarPage from "../pages/Car/CarPage";
+import UsersPage from "../pages/Users/UsersPage";
 
 export const authRouters = [
     { path: LOGIN_ROUTE, Component: <Login/>},
@@ -10,4 +12,9 @@ export const authRouters = [
 
 export const publicRoutes = [
     { path: ADMIN_ROUTE, Component: <Admin/>},
+]
+
+export const homeRoutes = [
+    { path: CAR_ROUTER, Component: <CarPage/> },
+    { path: USERS_ROUTER, Component: <UsersPage/> }
 ]

@@ -1,0 +1,15 @@
+.logo {
+    color: white;
+    padding: 15px;
+    font-size: 30px;
+    text-align: center;
+}
+
+.exit__button{
+    margin-right: 30px;
+}
+
+.email_user{
+    color: white;
+    margin-right: 15px;
+}
