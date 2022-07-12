@@ -1,7 +1,6 @@
 const express = require('express');
 const userControllers = require('../controllers/user');
 const { body, param} = require('express-validator');
-const auth = require('../middleware/auth');
 const validationRes = require('../middleware/validationRes');
 const UserModel = require('../models/User');
 const bcrypt = require('bcrypt');
@@ -12,7 +11,7 @@ const reviewController = require("../controllers/review");
 const router = express.Router();
 
 // GET /user
-router.get('/', auth, userControllers.getUsers);
+router.get('/', authMiddleware, userControllers.getUsers);
 
 // POST /user/register
 router.post('/register',
@@ -74,6 +73,51 @@ router.post('/login',
     validationRes, 
     userControllers.postLogin
 );
+
+// DELETE /user/:id
+router.delete('/:id', authMiddleware, rolesMiddleware,
+    [
+        param('id')
+            .isMongoId().withMessage("Невірний формат id")
+            .custom(async (value) => {
+                const user = await UserModel.findOne({_id:value});
+                if (!user) {
+                    throw new Error('Даного користувача не існує');
+                }
+                return value;
+            }),
+    ],
+    validationRes,
+    userControllers.deleteUser);
+
+// PUT /user/:id
+router.put('/:id', authMiddleware, rolesMiddleware,
+    [
+        param('id')
+            .isMongoId().withMessage("Невірний формат id")
+            .custom(async (value) => {
+                const user = await UserModel.findOne({_id:value});
+                if (!user) {
+                    throw new Error('Даного користувача не існує');
+                }
+                return value;
+            }),
+        body('email')
+            .isEmail()
+            .normalizeEmail()
+            .withMessage("Невірний формат email")
+            .custom(async (value, {req}) => {
+                const user = await UserModel.findOne({email:value});
+                if (user && user._id.toString() !== req.params.id.toString()) {
+                    throw new Error('Даний email вже зайнятий');
+                }
+            }),
+        body('is_superuser')
+            .isBoolean()
+            .withMessage('Super user має бути логічним значенням true або false')
+    ],
+    validationRes,
+    userControllers.editUser);
 
 // POST /user/logout
 router.post('/logout', userControllers.postLogout);

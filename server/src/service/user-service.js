@@ -25,6 +25,17 @@ const logout = async(refreshToken) => {
     await tokenService.removeToken()
 }
 
+const deleteUser = async(id) => {
+    return await UserModel.findByIdAndDelete(id);
+}
+
+const editUser = async(id, userData) => {
+    const user = await UserModel.findById(id);
+    const update = ['email', 'is_superuser'];
+    update.forEach((update) => user[update] = userData[update]);
+    await user.save();
+}
+
 const refresh = async(refreshToken) => {
     if (!refreshToken){
         throw CustomError.UnauthorizedError();
@@ -43,5 +54,12 @@ const refresh = async(refreshToken) => {
     return {...tokens, user};
 }
 
-module.exports = { registration, login, logout, refresh };
+module.exports = {
+    registration,
+    login,
+    logout,
+    refresh,
+    deleteUser,
+    editUser
+};
     

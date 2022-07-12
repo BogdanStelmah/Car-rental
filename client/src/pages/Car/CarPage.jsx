@@ -1,9 +1,13 @@
 import React from 'react';
+import {Table} from "antd";
 
 const CarPage = () => {
     return (
         <div>
-            Car
+            <Table
+            >
+
+            </Table>
         </div>
     );
 };

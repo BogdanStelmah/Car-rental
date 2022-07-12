@@ -1,6 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import AuthService from "../services/AuthService";
-import {useNavigate} from "react-router-dom";
 
 export const login = createAsyncThunk(
     'auth/login',
@@ -17,7 +16,6 @@ export const register = createAsyncThunk(
     'auth/register',
     async function({ email, password, confPassword }, { rejectWithValue }) {
         try {
-            console.log(email, password,confPassword)
             return await AuthService.registration(email, password, confPassword);
         } catch (error) {
             return rejectWithValue(error.response?.data?.errors[0]?.msg);
@@ -49,7 +47,8 @@ const authSlice = createSlice({
     initialState: {
         authenticated: false,
         user: {},
-        error: null
+        error: null,
+        loading: false
     },
     reducers: {
         authenticatedTrue(state) {
@@ -66,7 +65,9 @@ const authSlice = createSlice({
         }
     },
     extraReducers: {
-        [login.pending]: (state, action) => {},
+        [login.pending]: (state, action) => {
+
+        },
         [login.fulfilled]: (state, action) => {
             state.authenticated = true;
             state.user = action.payload?.data?.user;
@@ -77,13 +78,17 @@ const authSlice = createSlice({
             state.user = {}
         },
 
-        [checkAuth.pending]: (state, action) => {},
+        [checkAuth.pending]: (state, action) => {
+            state.loading = true;
+        },
         [checkAuth.fulfilled]: (state, action) => {
             state.authenticated = true;
+            state.loading = false;
             state.user = action.payload?.data?.user;
         },
         [checkAuth.rejected]: (state, action) => {
             state.authenticated = false;
+            state.loading = false;
             state.user = {}
         },
 
@@ -106,6 +111,6 @@ const authSlice = createSlice({
 })
 
 export default authSlice.reducer;
-export const { authUser, errorNull } = authSlice.actions;
+export const { authUser, errorNull, authenticatedFalse } = authSlice.actions;
 
 

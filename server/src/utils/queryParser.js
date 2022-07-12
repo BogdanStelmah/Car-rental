@@ -1,9 +1,7 @@
-const CarModel = require("../models/Car");
-
 // BUILD QUERY
 exports.queryParser = async (query, Model) => {
     try {
-        const tableFields = Model.getTableFields();
+        const tableFields = await Model.getTableFields();
 
         // Pagination
         let limit = Math.abs(parseInt(query.limit)) || 10;
@@ -49,7 +47,6 @@ exports.queryParser = async (query, Model) => {
                 }
             }
         }
-
         return { limit, skip, sort, filters }
     } catch (err) {
         throw new Error(err.message);
