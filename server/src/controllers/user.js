@@ -7,17 +7,50 @@ exports.getUsers = async (req, res, next) => {
     try {
         const { limit, skip, sort, filters } = await queryParser(req.query, User);
 
-        const count = await User
-            .find(filters)
-            .sort(sort)
-            .countDocuments();
+        let count = await User
+            .aggregate([
+                {
+                    $lookup:
+                        {
+                            from: 'passportdatas',
+                            localField: 'passportData',
+                            foreignField: '_id',
+                            as: 'passportData'
+                        }
+                },
+                {
+                    $match: filters
+                },
+                {
+                    $count: 'countDocuments'
+                }
+            ])
+        count = count[0]?.countDocuments;
         const totalPages = Math.ceil(count / limit);
 
+        const query = [
+            {
+                $lookup:
+                    {
+                        from: 'passportdatas',
+                        localField: 'passportData',
+                        foreignField: '_id',
+                        as: 'passportData'
+                    }
+            },
+            {
+                $match: filters
+            },
+        ]
+        if (Object.keys(sort).length !== 0) {
+            query.push({ $sort: sort })
+        }
+        const skipp = (skip - 1) * limit
+        query.push({ $skip: +skipp })
+        query.push({ $limit: limit })
+
         const users = await User
-            .find(filters)
-            .sort(sort)
-            .limit(limit)
-            .skip((skip -1 ) * limit)
+            .aggregate(query)
 
         res.status(200).json({
             message: "Fetched posts successfully.",

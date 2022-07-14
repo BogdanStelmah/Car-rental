@@ -1,7 +1,14 @@
 const bcrypt = require('bcrypt');
-const UserModel = require('../models/User');
-const tokenService = require('../service/token-servise');
 const CustomError = require("../exceptions/custom-error");
+
+//Models
+const UserModel = require('../models/User');
+const TokenModel = require('../models/Token');
+const PassportDataModel = require('../models/PassportData');
+
+//Services
+const tokenService = require('../service/token-servise');
+
 
 const registration = async (email, password) => {
     const hashPassword = await bcrypt.hash(password, 8);
@@ -26,7 +33,14 @@ const logout = async(refreshToken) => {
 }
 
 const deleteUser = async(id) => {
-    return await UserModel.findByIdAndDelete(id);
+    TokenModel.findOneAndDelete({ user: id })
+    const user = await UserModel.findByIdAndDelete(id);
+
+    if (user.passportData) {
+        await PassportDataModel.findOneAndDelete(user.passportData);
+    }
+
+    return user;
 }
 
 const editUser = async(id, userData) => {

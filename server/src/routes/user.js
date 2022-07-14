@@ -78,7 +78,7 @@ router.post('/login',
 router.delete('/:id', authMiddleware, rolesMiddleware,
     [
         param('id')
-            .isMongoId().withMessage("Невірний формат id")
+            .isMongoId().withMessage("Неправильний формат id")
             .custom(async (value) => {
                 const user = await UserModel.findOne({_id:value});
                 if (!user) {
@@ -94,7 +94,7 @@ router.delete('/:id', authMiddleware, rolesMiddleware,
 router.put('/:id', authMiddleware, rolesMiddleware,
     [
         param('id')
-            .isMongoId().withMessage("Невірний формат id")
+            .isMongoId().withMessage("Неправильний формат id")
             .custom(async (value) => {
                 const user = await UserModel.findOne({_id:value});
                 if (!user) {
@@ -105,7 +105,7 @@ router.put('/:id', authMiddleware, rolesMiddleware,
         body('email')
             .isEmail()
             .normalizeEmail()
-            .withMessage("Невірний формат email")
+            .withMessage("Неправильний формат email")
             .custom(async (value, {req}) => {
                 const user = await UserModel.findOne({email:value});
                 if (user && user._id.toString() !== req.params.id.toString()) {
@@ -129,7 +129,7 @@ router.get('/refresh', userControllers.getrefreshToken);
 router.get('/:userId/review',
     [
         param('userId')
-            .isMongoId().withMessage("Невірний формат id")
+            .isMongoId().withMessage("Неправильний формат id")
             .custom(async (value) => {
                 const user = await UserModel.findOne({_id:value});
                 if (!user) {

@@ -24,7 +24,7 @@ const passportDataSchema = new Schema({
         required: true
     },
     birthdate: {
-        type: String,
+        type: Date,
         required: true
     },
     imageLink: [{ type: Schema.Types.ObjectId, ref: 'Image' }],
@@ -36,8 +36,8 @@ passportDataSchema.statics.getTableFields = async () => {
         secondName: 'String',
         lastname: 'String',
         phoneNumber: 'String',
-        birthdate: 'String',
-        imageLink: 'String',
+        sex: 'String',
+        birthdate: 'Date',
     }
 }
 

@@ -10,7 +10,7 @@ exports.queryParser = async (query, Model) => {
         delete query.skip;
 
         // Sorting
-        const sort  = {};
+        const sort = {};
         if (query.sort) {
             const paramsSort = query.sort.split(',');
 
@@ -22,9 +22,8 @@ exports.queryParser = async (query, Model) => {
                     sort[fieldNames.slice(1)] = 1;
                 }
             })
-
-            delete query.sort;
         }
+        delete query?.sort;
 
         // Filtering
         const filters = {};
@@ -47,6 +46,7 @@ exports.queryParser = async (query, Model) => {
                 }
             }
         }
+
         return { limit, skip, sort, filters }
     } catch (err) {
         throw new Error(err.message);

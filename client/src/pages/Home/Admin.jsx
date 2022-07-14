@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 
 import {logout} from "../../toolKitRedux/authSlice";
@@ -33,6 +33,9 @@ const Admin = () => {
     }
 
     let navigate = useNavigate();
+    useEffect(() => {
+        navigate(CAR_ROUTER);
+    }, []);
 
     return (
         <Layout

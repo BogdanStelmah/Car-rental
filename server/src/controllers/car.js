@@ -14,13 +14,40 @@ exports.getCars = async (req, res, next) => {
         const count = await CarModel.countDocuments();
         const totalPages = Math.ceil(count / limit);
 
+        // const cars = await CarModel
+        //     .find(filters)
+        //     .sort(sort)
+        //     .limit(limit)
+        //     .skip((skip -1 ) * limit)
+        //     .populate('carType')
+        //     .populate('carImages')
         const cars = await CarModel
-            .find(filters)
+            .aggregate([
+                {
+                    $lookup:
+                        {
+                            from: 'cartypes',
+                            localField: 'carType',
+                            foreignField: '_id',
+                            as: 'carType'
+                        }
+                },
+                {
+                    $lookup:
+                        {
+                            from: 'images',
+                            localField: 'carImages',
+                            foreignField: '_id',
+                            as: 'carImages'
+                        }
+                },
+                {
+                    $match: filters
+                }
+            ])
             .sort(sort)
             .limit(limit)
             .skip((skip -1 ) * limit)
-            .populate('carType')
-            .populate('carImages');
 
         res.status(200).json({
             message: "Fetched posts successfully.",
