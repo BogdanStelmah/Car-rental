@@ -30,15 +30,8 @@ class PassportDataService {
         );
         const imagesId = await imageService.saveImagesToDB(uploadedResponse);
 
-        const newData = new PassportDataModel({
-            firstname: data.firstname,
-            secondName: data.secondName,
-            lastname: data.lastname,
-            phoneNumber: data.phoneNumber,
-            sex: data.sex,
-            birthdate: data.birthdate,
-            imageLink: imagesId,
-        })
+
+        const newData = new PassportDataModel({ ...data, imageLink: imagesId })
         await newData.save();
 
         return newData;
@@ -55,18 +48,31 @@ class PassportDataService {
             return;
         }
 
-        const uploadedResponse = await cloudinaryService.uploadToCloudinary(
-            images,
-            process.env.UPLOAD_PRESET_FOR_PASSPORT_DATA
-        );
-        const imagesId = await imageService.saveImagesToDB(uploadedResponse);
+        const update = {
+            $set: {},
+            $unset: {}
+        }
+        if (images.length !== 0) {
+            const uploadedResponse = await cloudinaryService.uploadToCloudinary(
+                images,
+                process.env.UPLOAD_PRESET_FOR_PASSPORT_DATA
+            );
+            const imagesId = await imageService.saveImagesToDB(uploadedResponse);
+            update.$set['imageLink'] = imagesId;
+        }
 
-        passportData = await PassportDataModel.findById(user.passportData);
-        passportData.imageLink = imagesId;
-        const update = ['firstname', 'secondName', 'lastname', 'phoneNumber', 'birthdate', 'sex'];
-        update.forEach((update) => passportData[update] = data[update]);
+        const updateFields = ['firstname', 'secondName', 'lastname', 'phoneNumber', 'birthdate', 'sex'];
+        updateFields.forEach((filed) => {
+            if (data[filed] !== undefined) {
+                if (data[filed] === '') {
+                    update.$unset[filed] = 1;
+                    return
+                }
+                update.$set[filed] = data[filed]
+            }
+        });
 
-        await passportData.save();
+        await PassportDataModel.findById(user.passportData).update(update);
     }
 }
 

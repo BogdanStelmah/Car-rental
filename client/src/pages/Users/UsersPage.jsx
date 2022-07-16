@@ -1,47 +1,71 @@
 import React, {useEffect, useState} from 'react';
-import {message, Modal, Table, Input, Form, Checkbox, Tag} from "antd";
-
-import {
-    EditOutlined,
-    DeleteOutlined,
-} from '@ant-design/icons';
+import {message, Modal, Table, Input, Form, Checkbox, Select, Button} from "antd";
+import { SearchOutlined } from '@ant-design/icons';
 
 import {useDispatch, useSelector} from "react-redux";
 import {deleteUser, errorNull, editUser, messageNull, setUser} from "../../toolKitRedux/userSlice";
+
 import {queryParser} from "../../components/utils/queryParser";
+
 import UserService from "../../services/UserService";
-import Search from "antd/es/input/Search";
+import PasswordDataService from "../../services/PasswordDataService";
+
+import PassportDataTDO from "./DTO/PassportDataTDO";
+import {columns} from "../../columns/userColumns";
+
+const { Option } = Select;
 
 const UsersPage = () => {
-    const [isEdit, setIsEdit] = useState(false);
-    const [editingUser, setEditingUser] = useState(null)
+    const [searchByField, setSearchByField] = useState('email');
+    const [searchText, setSearchText] = useState()
+    const [paramSearch, setParamSearch] = useState( );
 
     const [totalPages, setTotalPages] = useState(0);
-    const [params, setParams] = useState({
-        email: '',
+    const [paramTable, setParamTable] = useState({
         skip: 1,
         limit: 5
     });
+
+    const [isEdit, setIsEdit] = useState(false);
+    const [editingUser, setEditingUser] = useState(null)
+    const [passportData, setPassportData] = useState({
+        firstname: '',
+        lastname: '',
+        secondName: ''
+    });
+
     const dispatch = useDispatch()
 
     const authUser = useSelector(state => state.auth.user)
     const allUser = useSelector(state => state.user);
 
-    const onSearch = (value) => {
-        setParams({...params, email: value, skip: 1})
+    const search = () => {
+        setParamSearch({[searchByField]: searchText});
     }
 
     const handleTableChange = (newPagination, filters, sorter) => {
-        const newParams = queryParser(newPagination, filters, sorter)
-        setParams({...newParams, email: params.email});
+        setParamTable(queryParser(newPagination, filters, sorter));
     }
 
-    useEffect(() => {
-        UserService.fetchUsers(params).then((response) => {
+    const handleTextSearch = (value) => {
+        if (value.target.value !== '') {
+            setSearchText(value.target.value)
+            return;
+        }
+        setSearchText(undefined);
+    }
+
+    const getUsers = () => {
+        console.log({...paramTable, ...paramSearch})
+        UserService.fetchUsers({...paramTable, ...paramSearch}).then((response) => {
             setTotalPages(response.totalCount)
             dispatch(setUser(response.users));
         })
-    }, [params])
+    }
+
+    useEffect(() => {
+        getUsers();
+    }, [paramTable, paramSearch])
 
     useEffect(() => {
         if (allUser.error) {
@@ -53,9 +77,7 @@ const UsersPage = () => {
     useEffect(() => {
         if (allUser.status === 'resolved') {
             setIsEdit(false);
-            UserService.fetchUsers(params).then((response) => {
-                dispatch(setUser(response.users))
-            });
+            getUsers()
         }
     }, [allUser.status]);
 
@@ -66,6 +88,22 @@ const UsersPage = () => {
         }
     }, [allUser.message])
 
+
+    const handleRequest = () => {
+        dispatch(editUser(editingUser))
+
+        const formData = new FormData();
+        for (const passportDataKey in passportData) {
+            formData.append(passportDataKey, passportData[passportDataKey] || '');
+        }
+
+        PasswordDataService.editPassportData(editingUser._id, formData)
+            .then(() => {
+                getUsers()
+            })
+            .catch()
+    }
+
     const onDeleteUser = (record) => {
         Modal.confirm({
             title: "Ви впевнені, що хочете видалити цього користувача?",
@@ -74,9 +112,7 @@ const UsersPage = () => {
             cancelText: "Відміна",
             onOk: () => {
                 dispatch(deleteUser(record._id));
-                UserService.fetchUsers(params).then((response) => {
-                    dispatch(setUser(response.users))
-                });
+                getUsers()
             }
         });
     };
@@ -84,83 +120,40 @@ const UsersPage = () => {
     const onEditUser = (record) => {
         setIsEdit(true);
         setEditingUser({...record});
+        setPassportData(new PassportDataTDO({...record?.passportData[0]}))
     };
-
-    const columns = [
-        {
-            key:'1',
-            title:'Email',
-            dataIndex:'email',
-            sorter: {multiple: 1}
-        },
-        {
-            key:'2',
-            title:'Адмін',
-            dataIndex:'is_superuser',
-            render:(record => {
-                if (record) {
-                    return <Tag color="cyan">{record.toString()}</Tag>
-                }
-                return <Tag color="red">{record.toString()}</Tag>
-            }),
-            sorter: {multiple: 2}
-        },
-        {
-            key:'3',
-            title:'Дата створення',
-            dataIndex:'createdAt',
-            render:(record => {
-                return record.replace('T', ' ').split('.')[0];
-            }),
-            sorter: {multiple: 3}
-        },
-        {
-            key:'4',
-            title:'Дата обновлення',
-            dataIndex:'updatedAt',
-            render:(record => {
-                return record.replace('T', ' ').split('.')[0];
-            }),
-            sorter: {multiple: 4}
-        },
-        {
-            key:'5',
-            title:'Дії',
-            render: (record) => {
-                if (authUser._id === record._id) {
-                    return
-                }
-                return (
-                    <>
-
-                        <EditOutlined
-                            onClick={() => {
-                                onEditUser(record);
-                            }}
-                        />
-                        <DeleteOutlined
-                            onClick={() =>{
-                                onDeleteUser(record);
-                            }}
-                            style={{ color: '#d02828', marginLeft: 12 }}
-                        />
-                    </>
-                )
-            }
-        }
-    ]
 
     return (
         <div>
-            <Search placeholder="Пошук..." size='large' onSearch={onSearch} style={{width: 400, marginBottom: 20}}/>
+            <Input
+                allowClear
+                placeholder="Пошук"
+                size='large'
+                style={{width: 400, marginBottom: 20}}
+                onChange={handleTextSearch}
+            />
+            <Select
+                defaultValue="email"
+                style={{
+                    width: 140,
+                }}
+                size="large"
+                onChange={(value) => {setSearchByField(value)}}
+            >
+                <Option value="email">Email</Option>
+                <Option value="passportData.firstname">Ім'я</Option>
+                <Option value="passportData.lastname">Призвище</Option>
+                <Option value="passportData.secondName">По батькові</Option>
+            </Select>
+            <Button icon={<SearchOutlined />} onClick={search} size="large">Search</Button>
             <Table
                 loading={allUser.loading}
-                columns={columns}
+                columns={columns(onDeleteUser, onEditUser, authUser)}
                 dataSource={allUser.users}
                 pagination={{
                     total: totalPages,
-                    current: params.skip,
-                    pageSize: params.limit
+                    current: paramTable.skip,
+                    pageSize: paramTable.limit
                 }}
                 onChange={handleTableChange}
             >
@@ -171,13 +164,34 @@ const UsersPage = () => {
                 okText="Зберегти"
                 cancelText="Відміна"
                 onCancel={() => {
+                    setPassportData({})
                     setIsEdit(false);
                 }}
                 onOk={() => {
-                    dispatch(editUser(editingUser))
+                    handleRequest();
+                    setIsEdit(false);
+                    setPassportData({})
                 }}
             >
-                <Form>
+                <Form
+                    labelCol={{ span: 6 }}
+                    layout="vertical"
+                >
+                    <Form.Item label="Ім'я">
+                        <Input value={passportData.firstname} onChange={(event => {
+                            setPassportData({...passportData, firstname: event.target.value})
+                        })}/>
+                    </Form.Item>
+                    <Form.Item label="Прізвище">
+                        <Input value={passportData.lastname} onChange={(event => {
+                            setPassportData({...passportData, lastname: event.target.value})
+                        })}/>
+                    </Form.Item>
+                    <Form.Item label="По батькові">
+                        <Input value={passportData.secondName} onChange={(event => {
+                            setPassportData({...passportData, secondName: event.target.value})
+                        })}/>
+                    </Form.Item>
                     <Form.Item
                         label="Email"
                     >

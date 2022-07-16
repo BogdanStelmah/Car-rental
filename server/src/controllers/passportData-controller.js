@@ -60,13 +60,15 @@ exports.post = async (req, res, next) => {
 
 exports.postIdUser = async (req, res, next) => {
     try {
-        if (!(req.files?.length >= 2)){
-            throw CustomError.FilesError('Мінімальна кількість файлів 2');
-        }
-        for (const element of req.files){
-            const ext = path.extname(element.originalname);
-            if( ![".png", ".jpg", ".jpeg"].includes(ext) ){
-                throw CustomError.FilesError('Будь ласка завантажте зображення PNG, JPG, JPEG');
+        if (req.files?.length !== 0) {
+            if (!(req.files?.length >= 2)) {
+                throw CustomError.FilesError('Мінімальна кількість файлів 2');
+            }
+            for (const element of req.files) {
+                const ext = path.extname(element.originalname);
+                if (![".png", ".jpg", ".jpeg"].includes(ext)) {
+                    throw CustomError.FilesError('Будь ласка завантажте зображення PNG, JPG, JPEG');
+                }
             }
         }
 

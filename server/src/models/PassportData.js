@@ -5,15 +5,12 @@ const Schema = mongoose.Schema;
 const passportDataSchema = new Schema({
     firstname: {
         type: String,
-        required: true,
     },
     secondName: {
         type: String,
-        required: true
     },
     lastname: {
         type: String,
-        required: true
     },
     phoneNumber: {
         type: String,
@@ -21,11 +18,9 @@ const passportDataSchema = new Schema({
     },
     sex: {
         type: String,
-        required: true
     },
     birthdate: {
         type: Date,
-        required: true
     },
     imageLink: [{ type: Schema.Types.ObjectId, ref: 'Image' }],
 });

@@ -44,7 +44,7 @@ router.post('/', auth, rolesMiddleware,
             .exists()
             .not()
             .isEmpty()
-            .withMessage('color не може бути пустим')
+            .withMessage('\"Дата народження\" не може бути пустим')
             .isDate().withMessage('Неправильний формат дати народження')
     ],validationRes,
     passportDataController.post);
@@ -60,29 +60,14 @@ router.post('/:idUser', auth, rolesMiddleware,
                 }
                 return value;
             }),
-        body('firstname')
-            .exists()
-            .not()
-            .isEmpty()
-            .withMessage('firstname не може бути пустим'),
-        body('secondName')
-            .exists()
-            .not()
-            .isEmpty()
-            .withMessage('secondName не може бути пустим'),
-        body('lastname')
-            .exists()
-            .not()
-            .isEmpty()
-            .withMessage('lastname не може бути пустим'),
         body('phoneNumber')
+            .exists()
+            .optional()
             .matches(/^\+?3?8?(0[5-9][0-9]\d{7})$/)
             .withMessage('Номер телефону повинен бути формату +380XXXXXXXXX'),
         body('birthdate')
             .exists()
-            .not()
-            .isEmpty()
-            .withMessage('color не може бути пустим')
+            .optional()
             .isDate().withMessage('Неправильний формат дати народження')
     ],validationRes,
     passportDataController.postIdUser)

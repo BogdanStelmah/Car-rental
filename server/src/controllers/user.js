@@ -7,27 +7,6 @@ exports.getUsers = async (req, res, next) => {
     try {
         const { limit, skip, sort, filters } = await queryParser(req.query, User);
 
-        let count = await User
-            .aggregate([
-                {
-                    $lookup:
-                        {
-                            from: 'passportdatas',
-                            localField: 'passportData',
-                            foreignField: '_id',
-                            as: 'passportData'
-                        }
-                },
-                {
-                    $match: filters
-                },
-                {
-                    $count: 'countDocuments'
-                }
-            ])
-        count = count[0]?.countDocuments;
-        const totalPages = Math.ceil(count / limit);
-
         const query = [
             {
                 $lookup:
@@ -42,12 +21,22 @@ exports.getUsers = async (req, res, next) => {
                 $match: filters
             },
         ]
-        if (Object.keys(sort).length !== 0) {
-            query.push({ $sort: sort })
+
+        let count = await User
+            .aggregate(query.concat([
+                {
+                    $count: 'countDocuments'
+                }
+            ]))
+        count = count[0]?.countDocuments;
+        const totalPages = Math.ceil(count / limit);
+
+
+        if (sort) {
+            query.push({ $sort: sort });
         }
-        const skipp = (skip - 1) * limit
-        query.push({ $skip: +skipp })
-        query.push({ $limit: limit })
+        query.push({ $skip: skip });
+        query.push({ $limit: limit });
 
         const users = await User
             .aggregate(query)
@@ -130,9 +119,6 @@ exports.deleteUser = async (req, res, next) => {
 exports.editUser = async (req, res, next) => {
     try {
         const userId = req.params.id;
-        if (userId.toString() === req.user._id.toString()) {
-            throw CustomError.BadRequestError('Неможливо оновити себе')
-        }
 
         userService.editUser(userId, req.body);
 

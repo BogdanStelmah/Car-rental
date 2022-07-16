@@ -1,3 +1,6 @@
+//Models
+const PassportDataModel = require('./PassportData');
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -30,6 +33,7 @@ userSchema.statics.getTableFields = async () => {
         email: 'String',
         password: 'String',
         is_superuser: 'Boolean',
+        passportData: await PassportDataModel.getTableFields()
     }
 }
 
