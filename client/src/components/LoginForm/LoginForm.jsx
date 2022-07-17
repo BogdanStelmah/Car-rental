@@ -1,15 +1,17 @@
 import React from 'react';
 import classes from './LoginFrom.module.css';
-import {NavLink} from "react-router-dom";
-import {REGISTRATION_ROUTE} from "../utils/consts";
+import {NavLink, useNavigate} from "react-router-dom";
+import {CAR_ROUTER, REGISTRATION_ROUTE} from "../utils/consts";
 
 import {useDispatch, useSelector} from "react-redux";
 import {errorNull, login} from "../../toolKitRedux/authSlice";
-import {Button, Form, Input, message} from "antd";
+import {Button, Form, Input, message, Spin} from "antd";
 
 const LoginForm = () => {
     const dispatch = useDispatch()
     const error = useSelector(state => state.auth.error);
+    let navigate = useNavigate();
+
 
     if (error) {
         message.error(error);
@@ -18,6 +20,14 @@ const LoginForm = () => {
 
     const logIn = (email, password) => {
         dispatch(login({ email, password }))
+        navigate(CAR_ROUTER)
+    }
+
+    const isLoading = useSelector(state => state.auth.loading);
+    if (isLoading) {
+        return  (
+            <Spin size="large"/>
+        )
     }
 
     return (

@@ -1,53 +1,55 @@
-const CarModel = require('../models/Car');
-
-const path = require("path");
-
-const carService = require("../service/car-servise");
-const imageService = require('../service/image-servise');
 const {queryParser} = require("../utils/queryParser");
 const CustomError = require("../exceptions/custom-error");
+const path = require("path");
+
+//Models
+const CarModel = require('../models/Car');
+
+//Services
+const carService = require("../service/car-servise");
+const imageService = require('../service/image-servise');
 
 exports.getCars = async (req, res, next) => {
     try {
         const { limit, skip, sort, filters } = await queryParser(req.query, CarModel);
 
-        const count = await CarModel.countDocuments();
+        const query = [{
+                $lookup: {
+                    from: 'cartypes',
+                    localField: 'carType',
+                    foreignField: '_id',
+                    as: 'carType'
+                }
+            }, {
+                $lookup: {
+                    from: 'images',
+                    localField: 'carImages',
+                    foreignField: '_id',
+                    as: 'carImages'
+                }
+            },
+            {
+                $match: filters
+            }
+        ]
+
+        let count = await CarModel
+            .aggregate(query.concat([
+                {
+                    $count: 'countDocuments'
+                }
+            ]))
+        count = count[0]?.countDocuments;
         const totalPages = Math.ceil(count / limit);
 
-        // const cars = await CarModel
-        //     .find(filters)
-        //     .sort(sort)
-        //     .limit(limit)
-        //     .skip((skip -1 ) * limit)
-        //     .populate('carType')
-        //     .populate('carImages')
+        if (sort) {
+            query.push({ $sort: sort });
+        }
+        query.push({ $skip: skip });
+        query.push({ $limit: limit });
+
         const cars = await CarModel
-            .aggregate([
-                {
-                    $lookup:
-                        {
-                            from: 'cartypes',
-                            localField: 'carType',
-                            foreignField: '_id',
-                            as: 'carType'
-                        }
-                },
-                {
-                    $lookup:
-                        {
-                            from: 'images',
-                            localField: 'carImages',
-                            foreignField: '_id',
-                            as: 'carImages'
-                        }
-                },
-                {
-                    $match: filters
-                }
-            ])
-            .sort(sort)
-            .limit(limit)
-            .skip((skip -1 ) * limit)
+            .aggregate(query)
 
         res.status(200).json({
             message: "Fetched posts successfully.",
@@ -60,6 +62,24 @@ exports.getCars = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.getCar = async (req, res, next) => {
+    try {
+        const carId = req.params.id;
+
+        const car = await CarModel
+            .findById(carId)
+            .populate('carImages')
+            .populate('carType')
+
+        res.status(200).json({
+            message: "Fetched posts successfully.",
+            car: car,
+        })
+    } catch (e) {
+        next(e);
+    }
+}
 
 exports.postCar = async (req, res, next) => {
     try {
@@ -104,7 +124,7 @@ exports.deleteCar = async (req, res, next) => {
             imageService.deleteImage(imageId);
         }
 
-        res.status(500).json({
+        res.status(200).json({
             message: "Автомобіль видалено",
         });
     } catch (error) {

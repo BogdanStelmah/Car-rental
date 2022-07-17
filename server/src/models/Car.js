@@ -1,3 +1,6 @@
+//Models
+const CarTypeModel = require('./CarType');
+
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -66,6 +69,7 @@ carSchema.statics.getTableFields = async () => {
         numberPeople: 'Number',
         number: 'String',
         status: 'Boolean',
+        carType: await CarTypeModel.getTableFields()
     }
 }
 

@@ -21,7 +21,7 @@ class CustomError extends Error {
     }
 
     static FilesError(message) {
-        return new CustomError(401, message);
+        return new CustomError(400, message);
     }
 }
 

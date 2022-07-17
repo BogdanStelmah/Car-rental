@@ -56,7 +56,6 @@ const UsersPage = () => {
     }
 
     const getUsers = () => {
-        console.log({...paramTable, ...paramSearch})
         UserService.fetchUsers({...paramTable, ...paramSearch}).then((response) => {
             setTotalPages(response.totalCount)
             dispatch(setUser(response.users));
@@ -129,7 +128,7 @@ const UsersPage = () => {
                 allowClear
                 placeholder="Пошук"
                 size='large'
-                style={{width: 400, marginBottom: 20}}
+                style={{width: 300, marginBottom: 20}}
                 onChange={handleTextSearch}
             />
             <Select

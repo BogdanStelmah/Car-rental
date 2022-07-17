@@ -82,6 +82,11 @@ const checkBodyCar = () => [
 // GET /car?name=BMW
 router.get('/', carController.getCars);
 
+router.get('/:id',
+    checkExistCar(),
+    validationRes,
+    carController.getCar);
+
 //POST /car
 router.post('/', authMiddleware, rolesMiddleware,
     checkBodyCar(),

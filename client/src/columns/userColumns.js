@@ -1,7 +1,7 @@
 import {Tag} from "antd";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import React from "react";
-import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 export const columns = (onDeleteUser, onEditUser, authUser) => {
     return [
@@ -66,24 +66,17 @@ export const columns = (onDeleteUser, onEditUser, authUser) => {
                 if (authUser._id === record._id) {
                     return (
                         <EditOutlined
-                            onClick={() => {
-                                onEditUser(record);
-                            }}
+                            onClick={() => {onEditUser(record);}}
                         />
                     )
                 }
                 return (
                     <>
-
                         <EditOutlined
-                            onClick={() => {
-                                onEditUser(record);
-                            }}
+                            onClick={() => {onEditUser(record);}}
                         />
                         <DeleteOutlined
-                            onClick={() => {
-                                onDeleteUser(record);
-                            }}
+                            onClick={() => {onDeleteUser(record);}}
                             style={{color: '#d02828', marginLeft: 12}}
                         />
                     </>
