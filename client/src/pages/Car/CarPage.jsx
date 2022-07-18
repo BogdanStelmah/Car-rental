@@ -72,6 +72,7 @@ const CarPage = () => {
                                 : 'На паркінгу'
                             }
                         </div>
+                        <div><span>Вартість оренди: </span>{car?.price}</div>
                     </div>
                     <div>
                         <Button>Оформити оренду</Button>

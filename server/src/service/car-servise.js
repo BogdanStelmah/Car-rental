@@ -6,7 +6,6 @@ require('dotenv').config();
 const cloudinaryService = require("../service/cloudinary-servise");
 const imageService = require("./image-servise");
 
-
 //Models
 const CarModel = require("../models/Car");
 const ReviewModel = require("../models/Review")
@@ -20,6 +19,7 @@ const createCar = async (carData, carImages) => {
         brand: carData.brand,
         modelYear: carData.modelYear,
         description: carData.description,
+        price: carData.price,
         color: carData.color,
         numberPeople: carData.numberPeople,
         number: carData.number,
@@ -35,7 +35,7 @@ const createCar = async (carData, carImages) => {
 const updateCar = async (id, carData) => {
     const car = await CarModel.findOne({ _id: id })
 
-    const update = ['name', 'brand', 'modelYear', 'description', 'color', 'numberPeople', 'number', 'carType']
+    const update = ['name', 'brand', 'modelYear', 'description', 'color', 'price', 'numberPeople', 'number', 'carType']
 
     update.forEach((update) => car[update] = carData[update]);
 

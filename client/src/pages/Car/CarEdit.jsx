@@ -29,6 +29,7 @@ const CarEdit = () => {
                     name: response.car.name,
                     brand: response.car.brand,
                     modelYear: moment(response.car.modelYear, 'YYYY'),
+                    price: response.car.price,
                     description: response.car.description,
                     color: response.car.color,
                     numberPeople: response.car.numberPeople,
@@ -168,6 +169,19 @@ const CarEdit = () => {
                     hasFeedback
                 >
                     <DatePicker picker="year"/>
+                </Form.Item>
+                <Form.Item
+                    name="price"
+                    label="Вартість оренди"
+                    rules={[
+                        {
+                            required: true,
+                            message:'Будь ласка, введіть вартість оренди автомобіля'
+                        }
+                    ]}
+                    hasFeedback
+                >
+                    <InputNumber min={1} style={{width: '100%'}}/>
                 </Form.Item>
                 <Form.Item name="description" label="Опис"
                     rules={[

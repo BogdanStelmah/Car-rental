@@ -12,6 +12,7 @@ const carImageRoutes = require('./routes/carImage');
 const carRoutes = require('./routes/car');
 const dbRoutes = require('./routes/db-routes');
 const passportDataRoutes = require('./routes/passportData-router');
+const rentalRoutes = require('./routes/rental-routes');
 
 const errorMiddleware = require('./middleware/error');
 
@@ -29,6 +30,7 @@ app.use(cors({
 app.use('/passport', upload.any(), passportDataRoutes);
 app.use('/carType', carTypeRoutes);
 app.use('/user', userRoutes);
+app.use('/rental', rentalRoutes);
 app.use('/carImage', upload.any(), carImageRoutes);
 app.use('/car', upload.any(), carRoutes);
 app.use('/mongo/restore', dbRoutes);

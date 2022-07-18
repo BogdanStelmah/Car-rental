@@ -1,3 +1,8 @@
+//Models
+const PassportDataModel = require('./PassportData');
+const UserModel = require('./User');
+const CarModel = require('./Car');
+
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -37,5 +42,18 @@ const rentalSchema = new Schema({
     },
 },
     { timestamps: true });
+
+rentalSchema.statics.getTableFields = async () => {
+    return {
+        rentalPeriod: 'Number',
+        returnDate: 'Date',
+        paymentAmount: 'Number',
+        deposit: 'Number',
+        user: await PassportDataModel.getTableFields(),
+        car: await CarModel.getTableFields(),
+        admin: await UserModel.getTableFields(),
+        status: 'Boolean',
+    }
+}
 
 module.exports = mongoose.model('Rental', rentalSchema);

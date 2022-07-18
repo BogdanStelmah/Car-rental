@@ -18,8 +18,8 @@ router.get('/', carImageController.getImages);
 
 //POST /carImage/:idCar
 router.post('/:idCar',
-    // authMiddleware,
-    // rolesMiddleware,
+    authMiddleware,
+    rolesMiddleware,
     [
         param('idCar')
             .isMongoId().withMessage('Невірний формат id')
@@ -37,8 +37,8 @@ router.post('/:idCar',
 
 //DELETE /carImage/:idCar/:idImage
 router.delete('/:idCar/:idImage',
-    // authMiddleware,
-    // rolesMiddleware,
+    authMiddleware,
+    rolesMiddleware,
     [
         param('idCar')
             .isMongoId().withMessage('Невірний формат id')

@@ -48,6 +48,10 @@ const checkBodyCar = () => [
         .withMessage("Мінімальний розмір опису 10 символів")
         .isLength({ max: 500 })
         .withMessage("Максимальний розмір опису 500 символів"),
+    body('price')
+        .isNumeric()
+        .isFloat({ min: 1 })
+        .withMessage('Неправильно вказано суму оренди'),
     body('color')
         .exists()
         .not()
@@ -56,7 +60,7 @@ const checkBodyCar = () => [
     body('numberPeople')
         .isNumeric()
         .isInt({ min: 1, max: 12 })
-        .withMessage('Неправильно вказано клькість людей'),
+        .withMessage('Неправильно вказано кількість людей'),
     body('number')
         .isLength({ min: 1 })
         .withMessage("Мінімальний розмір номерного знаку 1 символ")

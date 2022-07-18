@@ -69,8 +69,15 @@ export const columns = (onDelete, navigate) => {
             }),
         },
         {
+            key: 'price',
+            title: 'Вартість оренди (1д)',
+            dataIndex: 'price',
+            sorter: {multiple: 9},
+        },
+        {
             key: '5',
             title: 'Дії',
+            width: 80,
             render: (record) => {
                 return (
                     <>

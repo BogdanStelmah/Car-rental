@@ -120,6 +120,19 @@ const CarCreatePage = () => {
                 >
                     <DatePicker picker="year"/>
                 </Form.Item>
+                <Form.Item
+                    name="price"
+                    label="Вартість оренди"
+                    rules={[
+                        {
+                            required: true,
+                            message:'Будь ласка, введіть вартість оренди автомобіля'
+                        }
+                    ]}
+                    hasFeedback
+                >
+                    <InputNumber min={1} style={{width: '100%'}}/>
+                </Form.Item>
                 <Form.Item name="description" label="Опис">
                     <TextArea rows={4} />
                 </Form.Item>

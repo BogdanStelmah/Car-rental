@@ -56,6 +56,11 @@ const carSchema = new Schema({
         type: Boolean,
         default: false
     },
+    price: {
+        type: Number,
+        required: true,
+        min: 0,
+    },
     versionKey: false
 });
 
@@ -69,6 +74,7 @@ carSchema.statics.getTableFields = async () => {
         numberPeople: 'Number',
         number: 'String',
         status: 'Boolean',
+        price: 'Number',
         carType: await CarTypeModel.getTableFields()
     }
 }
