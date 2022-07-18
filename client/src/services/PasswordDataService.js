@@ -9,4 +9,12 @@ export default class PasswordDataService {
         });
         return response?.data;
     }
+
+    static async fetchPassportData() {
+        const response = await $api({
+            method: 'get',
+            url: `passport`
+        });
+        return response?.data;
+    }
 }

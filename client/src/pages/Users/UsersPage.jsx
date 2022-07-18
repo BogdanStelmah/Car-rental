@@ -138,6 +138,8 @@ const UsersPage = () => {
                 }}
                 size="large"
                 onChange={(value) => {setSearchByField(value)}}
+                showSearch
+                filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
             >
                 <Option value="email">Email</Option>
                 <Option value="passportData.firstname">Ім'я</Option>

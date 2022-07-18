@@ -75,10 +75,11 @@ const addImage = async (idCar, images) => {
 }
 
 const deleteImage = async (idCar, idImage) => {
-    const car = await CarModel.findById(idCar);
+    let car = await CarModel.findById(idCar);
     await imageService.deleteImage(idImage);
 
-    car.carImages.filter((image) => { return image._id.toString() !== idImage })
+
+    car.carImages = car.carImages.filter((image) => {return image._id.toString() !== idImage })
     await car.save();
 }
 
