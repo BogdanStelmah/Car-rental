@@ -2,7 +2,7 @@ import {ADMIN_ROUTE, CAR_ROUTER, LOGIN_ROUTE, REGISTRATION_ROUTE, USERS_ROUTER} 
 import Admin from "../pages/Home/Admin";
 import Login from "../pages/Login";
 import Registration from "../pages/Registration";
-import CarPage from "../pages/Car/CarPage";
+import CarsPage from "../pages/Car/CarsPage";
 import UsersPage from "../pages/Users/UsersPage";
 
 export const authRouters = [
@@ -15,6 +15,6 @@ export const publicRoutes = [
 ]
 
 export const homeRoutes = [
-    { path: CAR_ROUTER, Component: <CarPage/> },
+    { path: CAR_ROUTER, Component: <CarsPage/> },
     { path: USERS_ROUTER, Component: <UsersPage/> }
 ]

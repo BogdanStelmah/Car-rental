@@ -43,4 +43,21 @@ export class CarService {
         });
         return response?.data;
     }
+
+    static async addPhotos(id, data) {
+        const response = await $api({
+            method: 'post',
+            url: `carImage/${id}`,
+            data: data
+        });
+        return response?.data;
+    }
+
+    static async deletePhoto(idCar, idImage) {
+        const response = await $api({
+            method: 'delete',
+            url: `carImage/${idCar}/${idImage}`,
+        });
+        return response?.data;
+    }
 }

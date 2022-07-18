@@ -3,10 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const rentalSchema = new Schema({
-    rentalDate: {
-        type: Date,
-        required: true
-    },
     rentalPeriod: {
         type: Number,
         required: true
@@ -19,16 +15,13 @@ const rentalSchema = new Schema({
         type: Number,
         required: true
     },
-    paymentDate: {
-        type: Date,
-    },
     deposit: {
         type: Number,
         required: true
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'PassportData'
     },
     car: {
         type: Schema.Types.ObjectId,
@@ -42,7 +35,7 @@ const rentalSchema = new Schema({
         type: Boolean,
         default: false
     },
-    versionKey: false
-});
+},
+    { timestamps: true });
 
 module.exports = mongoose.model('Rental', rentalSchema);

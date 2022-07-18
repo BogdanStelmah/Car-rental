@@ -4,7 +4,8 @@ require('dotenv').config();
 
 //Services
 const cloudinaryService = require("../service/cloudinary-servise");
-const carImageService = require("./image-servise");
+const imageService = require("./image-servise");
+
 
 //Models
 const CarModel = require("../models/Car");
@@ -12,7 +13,7 @@ const ReviewModel = require("../models/Review")
 
 const createCar = async (carData, carImages) => {
     const uploadedResponse = await cloudinaryService.uploadToCloudinary(carImages, process.env.UPLOAD_PRESET_FOR_CAR_IMAGES);
-    const imagesId = await carImageService.saveImagesToDB(uploadedResponse);
+    const imagesId = await imageService.saveImagesToDB(uploadedResponse);
 
     const newCar = new CarModel({
         name: carData.name,
@@ -34,7 +35,7 @@ const createCar = async (carData, carImages) => {
 const updateCar = async (id, carData) => {
     const car = await CarModel.findOne({ _id: id })
 
-    const update = await CarModel.getTableFields();
+    const update = ['name', 'brand', 'modelYear', 'description', 'color', 'numberPeople', 'number', 'carType']
 
     update.forEach((update) => car[update] = carData[update]);
 
@@ -63,4 +64,28 @@ const updateCarRating = async (id) => {
     await car.save();
 }
 
-module.exports = { createCar, updateCar, updateCarRating };
+const addImage = async (idCar, images) => {
+    const uploadedResponse = await cloudinaryService.uploadToCloudinary(images, process.env.UPLOAD_PRESET_FOR_CAR_IMAGES);
+    const imagesId = await imageService.saveImagesToDB(uploadedResponse);
+
+    const car = await CarModel.findById(idCar);
+    car.carImages.push(...imagesId);
+
+    await car.save();
+}
+
+const deleteImage = async (idCar, idImage) => {
+    const car = await CarModel.findById(idCar);
+    await imageService.deleteImage(idImage);
+
+    car.carImages.filter((image) => { return image._id.toString() !== idImage })
+    await car.save();
+}
+
+module.exports = {
+    createCar,
+    updateCar,
+    updateCarRating,
+    addImage,
+    deleteImage
+};

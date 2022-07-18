@@ -2,3 +2,47 @@
     font-size: 30px;
     margin-top: 20px;
 }
+
+.content__car {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.car__title {
+    font-size: 50px;
+    width: 550px;
+}
+
+.car__info {
+    border: 2px solid #3f3f3f;
+    padding: 20px;
+}
+
+.car__characteristic {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.car__characteristics {
+    font-size: 16px;
+}
+
+.car__characteristics > div {
+    font-weight: 500;
+    width: 440px;
+    margin: 5px 0 5px 0;
+}
+.car__characteristics > div > span {
+    font-weight: 400;
+}
+
+.reviews__car {
+    border: 2px solid #3f3f3f;
+    width: 1205px;
+    margin: 10px 0 10px 0;
+    padding: 10px;
+}
+.reviews__car > h1 {
+    font-size: 20px;
+}

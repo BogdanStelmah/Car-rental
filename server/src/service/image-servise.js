@@ -36,7 +36,7 @@ const deleteImage = async (id) => {
         throw CustomError.FilesError("Такої картинки не знайдено");
     }
 
-    cloudinaryService.deleteFromCloudinary(image);
+    await cloudinaryService.deleteFromCloudinary(image);
 }
 
 module.exports = {clearImageFromFolder, deleteImage, saveImagesToDB};

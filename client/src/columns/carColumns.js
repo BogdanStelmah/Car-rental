@@ -1,10 +1,18 @@
 import {Tag} from "antd";
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import React from "react";
 import {ADMIN_ROUTE} from "../components/utils/consts";
+import {Link} from "react-router-dom";
 
 export const columns = (onDelete, navigate) => {
     return [
+        {
+            key: '1',
+            title: '',
+            render: (record => {
+                return <Link to={`${ADMIN_ROUTE}/cars/${record._id}`}><EyeOutlined style={{color: "green"}}/></Link>
+            })
+        },
         {
             key: 'name',
             title: 'Назва',
@@ -55,9 +63,9 @@ export const columns = (onDelete, navigate) => {
             sorter: {multiple: 8},
             render: (record => {
                 if (record) {
-                    return <Tag color="cyan">{record.toString()}</Tag>
+                    return <Tag color="cyan">{record?.toString()}</Tag>
                 }
-                return <Tag color="red">{record.toString()}</Tag>
+                return <Tag color="red">{record?.toString()}</Tag>
             }),
         },
         {

@@ -1,71 +1,94 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Modal, Table} from "antd";
-import {queryParser} from "../../components/utils/queryParser";
+import {useNavigate, useParams} from "react-router-dom";
 import {CarService} from "../../services/CarService";
-import {columns} from "../../columns/carColumns";
-import {ADMIN_ROUTE, CAR_CREATED} from "../../components/utils/consts";
-import {useNavigate} from "react-router-dom";
+import {Button, Carousel, message, Rate} from "antd";
+import {ArrowLeftOutlined} from "@ant-design/icons";
+import classes from './CarCreatePage.module.css';
+import {ReviewsService} from "../../services/ReviewsService";
 
 const CarPage = () => {
-    let navigate = useNavigate();
-
-    const [dataSource, setDataSource] = useState();
-    const [totalPages, setTotalPages] = useState(0);
-    const [params, setParams] = useState({
-        skip: 1,
-        limit: 5
-    });
-
-    const getCar = () => {
-        CarService.fetchCars(params).then((response) => {
-            setTotalPages(response.totalCount)
-            setDataSource(response.cars);
-        })
-    }
+    const navigate = useNavigate();
+    const {id} = useParams();
+    const [car, setCar] = useState(null);
+    const [carReviews, setCarReviews] = useState(null);
 
     useEffect(() => {
-        getCar();
-    }, [params])
+        CarService.fetchCar(id)
+            .then((response) => {
+                setCar(response.car);
+            })
+            .catch((error) => {
+                let messageText = error?.response?.data?.message;
+                if (error?.response?.data?.errors[0]?.msg !== undefined) {
+                    messageText = error?.response?.data?.errors[0]?.msg;
+                }
 
-    const handleTableChange = (newPagination, filters, sorter) => {
-        const newParams = queryParser(newPagination, filters, sorter)
-        setParams({...newParams});
-    }
+                message.error(messageText)
+            })
 
-    const onDeleteCar = (record) => {
-        Modal.confirm({
-            title: "Ви впевнені, що хочете видалити цей автомобіль?",
-            okText: "Так",
-            okType: "danger",
-            cancelText: "Відміна",
-            onOk: () => {
-                CarService.deleteCar(record._id).then(() => {
-                    getCar();
-                });
-            }
-        });
-    };
-
-    const onEditCar = (record) => {
-        // setIsEdit(true);
-        // setEditingUser({...record});
-        // setPassportData(new PassportDataTDO({...record?.passportData[0]}))
-    };
+        ReviewsService.fetchReviewsCar(id)
+            .then((response) => {
+                setCarReviews(response?.review);
+            })
+    }, [])
 
     return (
         <div>
-            <Button onClick={() => navigate(ADMIN_ROUTE + "/" + CAR_CREATED)}>Додати автомобіль</Button>
-            <Table
-                columns={columns(onDeleteCar, navigate)}
-                dataSource={dataSource}
-                pagination={{
-                    total: totalPages,
-                    current: params.skip,
-                    pageSize: params.limit
-                }}
-                onChange={handleTableChange}
-            >
-            </Table>
+            <Button onClick={() => {navigate(-1)}}><ArrowLeftOutlined />Повернутися назад</Button>
+            <div className={classes.content__car}>
+                { car?.carImages?.length !== 1
+                    ? <Carousel autoplay style={{width: '600px', marginRight: '10px'}}>
+                        {car?.carImages?.map((image) =>
+                            <div>
+                                <img src={image.imageLink} style={{width: '600px'}}/>
+                            </div>
+                        )}
+                    </Carousel>
+                    : <div>
+                        {car?.carImages?.map((image) =>
+                            <div>
+                                <img src={image.imageLink} style={{width: '600px'}}/>
+                            </div>
+                        )}
+                    </div>
+                }
+
+                <div className={classes.car__info}>
+                    <h1 className={classes.car__title}>{car?.name}</h1>
+                    <p className={classes.car__characteristic}>Характеристики</p>
+                    <div className={classes.car__characteristics}>
+                        <div><span>Бренд: </span>{car?.brand}</div>
+                        <div><span>Рейтинг: </span><Rate disabled allowHalf value={car?.rating}/></div>
+                        <div><span>Рік виготовлення: </span>{car?.modelYear}</div>
+                        <div><span>Тип: </span>{car?.carType?.type}</div>
+                        <div><span>Опис: </span>{car?.description}</div>
+                        <div><span>Колір: </span>{car?.color}</div>
+                        <div><span>Кількість місць: </span>{car?.numberPeople}</div>
+                        <div><span>Номер: </span>{car?.number}</div>
+                        <div>
+                            <span>Статус: </span>
+                            {car?.status
+                            ? 'В прокаті'
+                                : 'На паркінгу'
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <Button>Оформити оренду</Button>
+                    </div>
+                </div>
+
+                <div className={classes.reviews__car}>
+                    <h1>Відгуки</h1>
+                    {carReviews?.map((review) =>
+                        <div>
+                            <div><Rate disabled allowHalf value={review.rating}/></div>
+                            <div>{review.content}</div>
+                            <div>{review.createdAt.split('T')[0]}</div>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
