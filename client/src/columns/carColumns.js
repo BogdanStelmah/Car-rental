@@ -1,4 +1,4 @@
-import {Tag} from "antd";
+import {Rate, Tag} from "antd";
 import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 import React from "react";
 import {ADMIN_ROUTE} from "../components/utils/consts";
@@ -42,6 +42,7 @@ export const columns = (onDelete, navigate) => {
             key: 'numberPeople',
             title: 'Кількість місць',
             dataIndex: 'numberPeople',
+            width: 100,
             sorter: {multiple: 5}
         },
         {
@@ -54,7 +55,11 @@ export const columns = (onDelete, navigate) => {
             key: 'rating',
             title: 'Рейтинг',
             dataIndex: 'rating',
-            sorter: {multiple: 7}
+            sorter: {multiple: 7},
+            width: 170,
+            render: (record => {
+                return <Rate disabled allowHalf value={record}/>
+            })
         },
         {
             key: 'status',
@@ -72,6 +77,7 @@ export const columns = (onDelete, navigate) => {
             key: 'price',
             title: 'Вартість оренди (1д)',
             dataIndex: 'price',
+            width: 130,
             sorter: {multiple: 9},
         },
         {

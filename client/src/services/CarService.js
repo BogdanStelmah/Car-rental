@@ -60,4 +60,12 @@ export class CarService {
         });
         return response?.data;
     }
+
+    static async fetchColors() {
+        const response = await $api({
+            method: 'get',
+            url: `car/colors`,
+        });
+        return response?.data;
+    }
 }

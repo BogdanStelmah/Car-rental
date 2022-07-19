@@ -33,24 +33,33 @@ exports.queryParser = async (query, Model) => {
         const filters = {};
 
         const generateFilters = (keyQuery, tableFields, value, fieldToSave) => {
-            console.log(keyQuery, tableFields, value)
             for (keyTableField in tableFields) {
                 // Checks if this field exists in the table
                 const queryField = keyQuery.split('.');
 
                 if (keyTableField === queryField[0]) {
                     // Checks the field type and sets search parameters
-                    console.log(keyQuery, value)
                     if (tableFields[queryField[0]] === 'String') {
                         filters[fieldToSave] = {$regex: value, $options: 'i'}
                         continue;
                     }
-                    if (tableFields[queryField[0]] === 'Number' && Number(value)) {
-                        filters[fieldToSave] = {$eq: value}
-                        continue;
+                    if (tableFields[queryField[0]] === 'Number') {
+                        if (Number(value)) {
+                            filters[fieldToSave] = {$gte: +value}
+                            continue;
+                        }
+
+                        const values = value.split('to');
+                        if (Number(values[0]) && Number(values[1])) {
+                            filters[fieldToSave] = {$gte: +values[0], $lte: +values[1]};
+                            continue;
+                        }
                     }
                     if (tableFields[queryField[0]] === 'Boolean' && ['true', 'false'].includes(value)) {
-                        filters[fieldToSave] = {$eq: value}
+                        filters[fieldToSave] = {$eq: value === 'true'}
+                        continue;
+                    }
+                    if (tableFields[queryField[0]] === 'Date') {
                         continue;
                     }
                     if (typeof tableFields[queryField[0]] === 'object') {
@@ -63,6 +72,7 @@ exports.queryParser = async (query, Model) => {
             generateFilters(keyQuery, tableFields, query[keyQuery], keyQuery);
         }
 
+        console.log(filters)
         return { limit, skip, sort, filters }
     } catch (err) {
         throw new Error(err.message);

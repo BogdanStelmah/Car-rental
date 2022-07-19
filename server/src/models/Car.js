@@ -43,7 +43,7 @@ const carSchema = new Schema({
     rating: {
         type: Number,
         required: true,
-        default: 0,
+        default: 5,
         min: 0,
         max: 5
     },
@@ -73,6 +73,7 @@ carSchema.statics.getTableFields = async () => {
         color: 'String',
         numberPeople: 'Number',
         number: 'String',
+        rating: 'Number',
         status: 'Boolean',
         price: 'Number',
         carType: await CarTypeModel.getTableFields()

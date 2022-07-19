@@ -86,6 +86,8 @@ const checkBodyCar = () => [
 // GET /car?name=BMW
 router.get('/', carController.getCars);
 
+router.get('/colors', carController.getColors);
+
 router.get('/:id',
     checkExistCar(),
     validationRes,

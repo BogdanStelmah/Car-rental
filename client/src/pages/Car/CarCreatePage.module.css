@@ -46,3 +46,30 @@
 .reviews__car > h1 {
     font-size: 20px;
 }
+
+.cars__filters__block {
+    border: 2px solid #3f3f3f;
+    padding: 10px;
+    margin: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+.filters__block__left {
+    width: 50%;
+    border-right: 2px solid #3f3f3f;
+    padding-right: 10px;
+}
+.filters__block__right {
+    width: 50%;
+    padding-left: 10px;
+}
+.filters__block__right > div {
+    margin: 0 0 20px 0;
+}
+.block__right__rating {
+    display: flex;
+}
+.block__right__rating > .block__right__title {
+    padding-top: 7px;
+    width: 60px;
+}

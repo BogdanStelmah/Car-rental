@@ -81,6 +81,19 @@ exports.getCar = async (req, res, next) => {
     }
 }
 
+exports.getColors = async (req, res, next) => {
+    try {
+        const colors = await CarModel.distinct('color')
+
+        res.status(200).json({
+            message: "Fetched posts successfully.",
+            colors: colors
+        })
+    } catch (e) {
+        next(e);
+    }
+}
+
 exports.postCar = async (req, res, next) => {
     try {
         if (!(req.files?.length > 0)){
