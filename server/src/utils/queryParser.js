@@ -72,7 +72,6 @@ exports.queryParser = async (query, Model) => {
             generateFilters(keyQuery, tableFields, query[keyQuery], keyQuery);
         }
 
-        console.log(filters)
         return { limit, skip, sort, filters }
     } catch (err) {
         throw new Error(err.message);

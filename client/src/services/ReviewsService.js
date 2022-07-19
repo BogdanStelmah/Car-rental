@@ -8,4 +8,13 @@ export class ReviewsService {
         });
         return response?.data;
     }
+
+    static async addReviewCar(idCar, data) {
+        const response = await $api({
+            method: 'post',
+            url: `car/${idCar}/review`,
+            data: data
+        });
+        return response?.data;
+    }
 }

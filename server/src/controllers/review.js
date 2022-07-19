@@ -49,8 +49,7 @@ exports.postReview = async (req, res, next) => {
     try {
         const reviewData = req.body;
         const carId = req.params.id;
-        const newReview = await reviewService.createReview(reviewData, carId, req.user);
-        carService.updateCarRating(carId);
+        const newReview = await reviewService.createReview(reviewData, carId);
 
         res.status(201).json({
             message: "Comment created successfully",

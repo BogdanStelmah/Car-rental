@@ -34,7 +34,7 @@ const CarEdit = () => {
                     color: response.car.color,
                     numberPeople: response.car.numberPeople,
                     number: response.car.number,
-                    carType: response.car.carType._id
+                    carType: response.car?.carType?._id
                 })
             })
             .catch((error) => {

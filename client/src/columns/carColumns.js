@@ -67,10 +67,10 @@ export const columns = (onDelete, navigate) => {
             dataIndex: 'status',
             sorter: {multiple: 8},
             render: (record => {
-                if (record) {
-                    return <Tag color="cyan">{record?.toString()}</Tag>
+                if (!record) {
+                    return <Tag color="cyan">На паркінгу</Tag>
                 }
-                return <Tag color="red">{record?.toString()}</Tag>
+                return <Tag color="red">В прокаті</Tag>
             }),
         },
         {

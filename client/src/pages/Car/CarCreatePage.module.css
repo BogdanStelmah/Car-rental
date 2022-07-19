@@ -73,3 +73,13 @@
     padding-top: 7px;
     width: 60px;
 }
+
+.review {
+    margin: 0 15px 15px 0;
+    padding: 10px;
+    width: content-box;
+    border: 2px solid rgba(63, 63, 63, 0.42);
+}
+.reviews__list {
+    display: flex;
+}

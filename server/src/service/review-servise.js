@@ -8,14 +8,14 @@ exports.getReviewsByUserId = async (userId) => {
 }
 
 exports.getReviewsByCarId = async (carId) => {
-    return await ReviewModel.find({ car: carId });
+    return await ReviewModel.find({ car: carId }).populate('user');
 }
 
-exports.createReview = async (reviewData, carId, user) => {
+exports.createReview = async (reviewData, carId) => {
     const newReview = await ReviewModel({
         content: reviewData.content,
         rating: reviewData.rating,
-        user: user.id,
+        user: reviewData.customer,
         car: carId,
     });
     await newReview.save()

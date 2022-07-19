@@ -31,7 +31,7 @@ const CarsPage = () => {
     const [valueNumberPeople, setValueNumberPeople] = useState(1);
     const [valueModelYear, setValueModelYear] = useState({from: new Date().getFullYear() - 40, to: new Date().getFullYear()});
 
-    const ratingDescription = ['жахливий', 'поганий', 'нормальний', 'хороший', 'чудовий'];
+    const ratingDescription = ['жахливо', 'погано', 'нормально', 'добре', 'чудово'];
     const [valueRating, setValueRating] = useState(1);
 
     const [valueStatus, setValueStatus] = useState('any');

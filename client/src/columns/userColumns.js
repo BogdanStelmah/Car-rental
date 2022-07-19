@@ -1,7 +1,6 @@
 import {Tag} from "antd";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import React from "react";
-import {useNavigate} from "react-router-dom";
 
 export const columns = (onDeleteUser, onEditUser, authUser) => {
     return [

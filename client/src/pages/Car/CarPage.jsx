@@ -83,7 +83,7 @@ const CarPage = () => {
                             </div>
                         )}
                     </Carousel>
-                    : <div>
+                    : <div style={{width: '600px', marginRight: '10px'}}>
                         {car?.carImages?.map((image) =>
                             <div>
                                 <img src={image.imageLink} style={{width: '600px'}}/>
@@ -127,13 +127,16 @@ const CarPage = () => {
 
                 <div className={classes.reviews__car}>
                     <h1>Відгуки</h1>
-                    {carReviews?.map((review) =>
-                        <div>
-                            <div><Rate disabled allowHalf value={review.rating}/></div>
-                            <div>{review.content}</div>
-                            <div>{review.createdAt.split('T')[0]}</div>
-                        </div>
-                    )}
+                    <div className={classes.reviews__list}>
+                        {carReviews?.map((review) =>
+                            <div className={classes.review}>
+                                <div><b>{review?.user?.firstname}</b></div>
+                                <div><Rate disabled allowHalf value={review.rating}/></div>
+                                <div>{review.content}</div>
+                                <div>{review.createdAt.split('T')[0]}</div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
             <Modal

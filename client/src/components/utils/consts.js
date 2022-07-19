@@ -8,3 +8,7 @@ export const CAR_EDIT = 'cars/:id/edit'
 export const CAR_PAGE = 'cars/:id'
 
 export const USERS_ROUTER = 'users'
+
+export const CAR_TYPE_ROUTER = 'carTypes'
+
+export const RENTAL_ROUTER = 'rentals'

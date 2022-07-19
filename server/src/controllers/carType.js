@@ -1,22 +1,50 @@
-const CarType = require('../models/CarType');
+const {queryParser} = require("../utils/queryParser");
 
+//Models
+const CarTypeModel = require('../models/CarType');
 
 exports.getCarTypes = async (req, res, next) => {
     try {
-        const carTypes = await CarType.find();
+        const { limit, skip, sort, filters } = await queryParser(req.query, CarTypeModel);
+
+        const query = [{
+            $match: filters
+        }]
+
+        let count = await CarTypeModel
+            .aggregate(query.concat([
+                {
+                    $count: 'countDocuments'
+                }
+            ]))
+        count = count[0]?.countDocuments;
+        const totalPages = Math.ceil(count / limit);
+
+        if (sort) {
+            query.push({ $sort: sort });
+        }
+        query.push({ $skip: skip });
+        query.push({ $limit: limit });
+
+        const carTypes = await CarTypeModel
+            .aggregate(query)
+
         res.status(200).json({
             message: "Fetched posts successfully.",
-            carTypes: carTypes
+            carTypes: carTypes,
+            page: skip,
+            totalCount: count,
+            totalPages: totalPages
         })
     } catch (error) {
-        res.status(500).send(error.message);
+        next(error)
     }
 } 
 
 exports.getCarType = async (req, res, next) => {
     try {
         const idType = req.params.idType;
-        const cartype = await CarType.findOne({_id: idType})
+        const cartype = await CarTypeModel.findOne({_id: idType})
 
         res.status(200).json({
             message: "Fetched posts successfully.",
@@ -29,10 +57,13 @@ exports.getCarType = async (req, res, next) => {
 
 exports.postCarType = async (req, res, next) => {
     try {
-        const carType = CarType(req.body);
+        const carType = CarTypeModel(req.body);
 
         await carType.save()
-        res.status(201).send(carType);
+        res.status(201).json({
+            message: "Створено нову категорію",
+            carType: carType
+        });
     } catch (error) {
         next(error);
     }
@@ -40,7 +71,7 @@ exports.postCarType = async (req, res, next) => {
 
 exports.deleteCarType = async (req, res, next) => {
     try {
-        const deletedCarType = await CarType.findByIdAndDelete(req.params.idType)
+        const deletedCarType = await CarTypeModel.findByIdAndDelete(req.params.idType)
 
         res.status(204).json({
             message: "Machine type successfully deleted.",
@@ -52,7 +83,7 @@ exports.deleteCarType = async (req, res, next) => {
 
 exports.putCarType = async (req, res, next) => {
     try {
-        const carType = await CarType.findById(req.params.idType);
+        const carType = await CarTypeModel.findById(req.params.idType);
         const update = ['type', 'description'];
         update.forEach((update) => carType[update] = req.body[update]);
         await carType.save();

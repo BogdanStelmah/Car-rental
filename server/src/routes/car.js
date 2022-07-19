@@ -133,11 +133,19 @@ router.get('/:id/review',
 // POST /car/:id/review
 router.post('/:id/review', authMiddleware,
     [
+        body('customer')
+            .exists()
+            .not()
+            .isEmpty()
+            .withMessage('\"customer\" не може бути пустим'),
         body('content')
             .exists()
+            .not()
+            .isEmpty()
+            .withMessage('Відгук не може бути пустим')
             .isLength({max: 100}).withMessage("Максимальна кількість букв має бути не більше 100"),
         body('rating')
-            .isInt({ min: 1, max: 5 }).withMessage("Рейтинг повинен бути числом від 0 до 5"),
+            .isInt({ min: 1, max: 5 }).withMessage("Рейтинг повинен бути числом від 1 до 5"),
         param('id')
             .isMongoId().withMessage("Невірний формат id")
             .custom(async (value) => {

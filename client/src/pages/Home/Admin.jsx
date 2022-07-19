@@ -20,7 +20,7 @@ import {Avatar, Layout, Menu} from 'antd';
 
 import classes from "./Admin.module.css";
 import {Outlet, useNavigate} from "react-router-dom";
-import {CAR_ROUTER, USERS_ROUTER} from "../../components/utils/consts";
+import {CAR_ROUTER, CAR_TYPE_ROUTER, RENTAL_ROUTER, USERS_ROUTER} from "../../components/utils/consts";
 
 const { Header, Content, Sider } = Layout;
 
@@ -67,17 +67,17 @@ const Admin = () => {
                     <Menu.Item key={2} onClick={() => {navigate(CAR_ROUTER)}}>
                         <CarOutlined /> Автомобілі
                     </Menu.Item>
-                    <Menu.Item key={3}>
+                    <Menu.Item key={3} onClick={() => {navigate(CAR_TYPE_ROUTER)}}>
                         <FormatPainterOutlined /> Типи автомобілів
                     </Menu.Item>
-                    <Menu.Item key={4}>
-                        <FileImageOutlined /> Картинки
+                    <Menu.Item key={4} onClick={() => {navigate(RENTAL_ROUTER)}}>
+                        <UnorderedListOutlined /> Замовлення
                     </Menu.Item>
                     <Menu.Item key={5}>
-                        <DatabaseOutlined /> DB Tools
+                        <FileImageOutlined /> Картинки
                     </Menu.Item>
                     <Menu.Item key={6}>
-                        <UnorderedListOutlined /> Замовлення
+                        <DatabaseOutlined /> DB Tools
                     </Menu.Item>
                     <Menu.Item key={7}>
                         <HighlightOutlined /> Відгуки
