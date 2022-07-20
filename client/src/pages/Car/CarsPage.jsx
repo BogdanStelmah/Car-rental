@@ -77,7 +77,6 @@ const CarsPage = () => {
         data["rating"] = valueRating;
         data["modelYear"] = valueModelYear.from + "to" + valueModelYear.to;
 
-        console.log(data)
         setSearchParams(data);
     }
 
@@ -185,7 +184,7 @@ const CarsPage = () => {
                     </div>
                     <div>
                         <div className={classes.block__right__select__title}>
-                            Статус оренди
+                            Статус
                         </div>
                         <Select
                             style={{
@@ -197,8 +196,8 @@ const CarsPage = () => {
                             onChange={setValueStatus}
                         >
                             <Select.Option value="any">Будь-який</Select.Option>
-                            <Select.Option value="true">На паркінгу</Select.Option>
-                            <Select.Option value="false">В прокаті</Select.Option>
+                            <Select.Option value="false">На паркінгу</Select.Option>
+                            <Select.Option value="true">В прокаті</Select.Option>
                         </Select>
                         </div>
                     <div>

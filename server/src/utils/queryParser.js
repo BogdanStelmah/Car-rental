@@ -60,7 +60,11 @@ exports.queryParser = async (query, Model) => {
                         continue;
                     }
                     if (tableFields[queryField[0]] === 'Date') {
-                        continue;
+                        const dates = value.split('to');
+                        if (dates[0] !== dates[1]) {
+                            filters[fieldToSave] = {$gte: new Date(dates[0]), $lt: new Date(dates[1])};
+                            continue;
+                        }
                     }
                     if (typeof tableFields[queryField[0]] === 'object') {
                         generateFilters(queryField[1], tableFields[queryField[0]], value, fieldToSave);

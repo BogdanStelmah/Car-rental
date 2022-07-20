@@ -1,0 +1,10 @@
+.block__filters {
+    border: 2px solid rgba(63, 63, 63, 0.63);
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 500px;
+}
+
+.block__filters > div {
+    margin-bottom: 10px;
+}

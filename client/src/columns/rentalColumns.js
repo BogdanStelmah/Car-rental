@@ -2,6 +2,12 @@ import {Tag} from "antd";
 import {CheckOutlined, DeleteOutlined} from "@ant-design/icons";
 import React from "react";
 
+const toUAH = new Intl.NumberFormat("ua", {
+    style: "currency",
+    currency: "UAH",
+    minimumFractionDigits: 0,
+})
+
 export const columns = (onDelete, onEnd) => {
     return [
         {
@@ -35,7 +41,7 @@ export const columns = (onDelete, onEnd) => {
             sorter: {multiple: 1},
             width: 140,
             render: (paymentAmount) => {
-                return paymentAmount + ' грн'
+                return toUAH.format(paymentAmount)
             }
         },
         {
@@ -45,7 +51,7 @@ export const columns = (onDelete, onEnd) => {
             sorter: {multiple: 2},
             width: 140,
             render: (deposit) => {
-                return deposit + ' грн'
+                return toUAH.format(deposit)
             }
         },
         {
@@ -66,9 +72,18 @@ export const columns = (onDelete, onEnd) => {
             key: 'user',
             title: 'Орендар',
             dataIndex: 'user',
-            width: 270,
+            width: 230,
             render: (record => {
                 return `${record[0]?.firstname} ${record[0]?.lastname} ${record[0]?.secondName}`
+            }),
+        },
+        {
+            key: 'phoneNumber',
+            title: 'Номер',
+            dataIndex: 'user',
+            width: 120,
+            render: (record => {
+                return record[0]?.phoneNumber || '-'
             }),
         },
         {
@@ -115,7 +130,7 @@ export const columns = (onDelete, onEnd) => {
             key: 'status',
             dataIndex: 'status',
             title: 'Статус оренди',
-            width: 120,
+            width: 90,
             fixed: 'right',
             render: (record => {
                 if (record) {

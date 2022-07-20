@@ -53,6 +53,7 @@ rentalSchema.statics.getTableFields = async () => {
         car: await CarModel.getTableFields(),
         admin: await UserModel.getTableFields(),
         status: 'Boolean',
+        createdAt: 'Date',
     }
 }
 
