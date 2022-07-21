@@ -12,13 +12,16 @@ import PasswordDataService from "../../services/PasswordDataService";
 
 import PassportDataTDO from "./DTO/PassportDataTDO";
 import {columns} from "../../columns/userColumns";
+import classes from "./User.module.css";
 
 const { Option } = Select;
 
 const UsersPage = () => {
+    const [valueIsSuperUser, setValueIsSuperUser] = useState('any')
+
     const [searchByField, setSearchByField] = useState('email');
     const [searchText, setSearchText] = useState()
-    const [paramSearch, setParamSearch] = useState( );
+    const [paramSearch, setParamSearch] = useState();
 
     const [totalPages, setTotalPages] = useState(0);
     const [paramTable, setParamTable] = useState({
@@ -40,7 +43,7 @@ const UsersPage = () => {
     const allUser = useSelector(state => state.user);
 
     const search = () => {
-        setParamSearch({[searchByField]: searchText});
+        setParamSearch({[searchByField]: searchText, ['is_superuser']: valueIsSuperUser});
     }
 
     const handleTableChange = (newPagination, filters, sorter) => {
@@ -96,7 +99,7 @@ const UsersPage = () => {
             formData.append(passportDataKey, passportData[passportDataKey] || '');
         }
 
-        PasswordDataService.editPassportData(editingUser._id, formData)
+        PasswordDataService.editPassportDataToUser(editingUser._id, formData)
             .then(() => {
                 getUsers()
             })
@@ -124,29 +127,60 @@ const UsersPage = () => {
 
     return (
         <div>
-            <Input
-                allowClear
-                placeholder="Пошук"
-                size='large'
-                style={{width: 300, marginBottom: 20}}
-                onChange={handleTextSearch}
-            />
-            <Select
-                defaultValue="email"
-                style={{
-                    width: 140,
-                }}
-                size="large"
-                onChange={(value) => {setSearchByField(value)}}
-                showSearch
-                filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
-            >
-                <Option value="email">Email</Option>
-                <Option value="passportData.firstname">Ім'я</Option>
-                <Option value="passportData.lastname">Призвище</Option>
-                <Option value="passportData.secondName">По батькові</Option>
-            </Select>
-            <Button icon={<SearchOutlined />} onClick={search} size="large">Search</Button>
+            <div className={classes.block__filters}>
+                <div>
+                    <Input
+                        allowClear
+                        placeholder="Пошук"
+                        size='large'
+                        style={{width: 200}}
+                        onChange={handleTextSearch}
+                    />
+                </div>
+                <div>
+                    <div>
+                        Поле пошуку
+                    </div>
+                    <Select
+                        defaultValue="email"
+                        style={{
+                            width: 140,
+                            marginRight: '10px',
+                        }}
+                        size="large"
+                        onChange={(value) => {setSearchByField(value)}}
+                        showSearch
+                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+                    >
+                        <Option value="email">Email</Option>
+                        <Option value="passportData.firstname">Ім'я</Option>
+                        <Option value="passportData.lastname">Призвище</Option>
+                        <Option value="passportData.secondName">По батькові</Option>
+                    </Select>
+                </div>
+                <div>
+                    <div>
+                        Роль
+                    </div>
+                    <Select
+                        style={{
+                            width: '200px',
+                            marginRight: '10px',
+                        }}
+                        defaultValue="any"
+                        size="large"
+                        value={valueIsSuperUser}
+                        onChange={setValueIsSuperUser}
+                    >
+                        <Select.Option value="any">Будь-якa</Select.Option>
+                        <Select.Option value="true">Адмін</Select.Option>
+                        <Select.Option value="false">Не адмін</Select.Option>
+                    </Select>
+                </div>
+                <div>
+                    <Button icon={<SearchOutlined />} onClick={search} size="large" style={{width: 130}}>Search</Button>
+                </div>
+            </div>
             <Table
                 loading={allUser.loading}
                 columns={columns(onDeleteUser, onEditUser, authUser)}

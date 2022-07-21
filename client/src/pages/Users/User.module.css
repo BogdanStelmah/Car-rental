@@ -1,0 +1,9 @@
+.block__filters {
+    border: 2px solid rgba(63, 63, 63, 0.63);
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    width: 720px;
+}

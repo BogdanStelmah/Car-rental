@@ -97,7 +97,7 @@ const CarPage = () => {
                     <p className={classes.car__characteristic}>Характеристики</p>
                     <div className={classes.car__characteristics}>
                         <div><span>Бренд: </span>{car?.brand}</div>
-                        <div><span>Рейтинг: </span><Rate disabled allowHalf value={car?.rating}/></div>
+                        <div><span>Рейтинг: </span><Rate disabled allowHalf value={car?.rating}/> {car?.rating}</div>
                         <div><span>Рік виготовлення: </span>{car?.modelYear}</div>
                         <div><span>Тип: </span>{car?.carType?.type}</div>
                         <div><span>Опис: </span>{car?.description}</div>

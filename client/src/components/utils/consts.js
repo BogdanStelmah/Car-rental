@@ -12,3 +12,7 @@ export const USERS_ROUTER = 'users'
 export const CAR_TYPE_ROUTER = 'carTypes'
 
 export const RENTAL_ROUTER = 'rentals'
+
+export const PASSPORT_DATA_ROUTER = 'passportsData'
+export const PASSPORT_DATA_CREATE_ROUTER = 'passportsData/create'
+export const PASSPORT_DATA_EDIT_ROUTER = 'passportsData/:id/edit'

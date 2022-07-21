@@ -2,10 +2,14 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const connectionToDB = async () => {
-    await mongoose.connect(process.env.MONGO_URL + process.env.DB_NAME, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
+    try {
+        await mongoose.connect(process.env.MONGO_URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+    } catch (e) {
+        new Error('Помилка підключення до БД')
+    }
 }
 
 module.exports = { connectionToDB };

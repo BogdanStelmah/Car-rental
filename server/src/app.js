@@ -33,7 +33,7 @@ app.use('/user', userRoutes);
 app.use('/rental', rentalRoutes);
 app.use('/carImage', upload.any(), carImageRoutes);
 app.use('/car', upload.any(), carRoutes);
-app.use('/mongo/restore', dbRoutes);
+app.use('/mongo', dbRoutes);
 
 app.use(errorMiddleware);
 

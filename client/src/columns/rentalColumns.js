@@ -74,7 +74,20 @@ export const columns = (onDelete, onEnd) => {
             dataIndex: 'user',
             width: 230,
             render: (record => {
-                return `${record[0]?.firstname} ${record[0]?.lastname} ${record[0]?.secondName}`
+                let text = ''
+                if (record[0]?.firstname) {
+                    text += `${record[0]?.firstname} `;
+                }
+                if (record[0]?.lastname) {
+                    text += `${record[0]?.lastname} `;
+                }
+                if (record[0]?.secondName) {
+                    text += record[0]?.secondName;
+                }
+                if (text === '') {
+                    return '-'
+                }
+                return text;
             }),
         },
         {
@@ -108,7 +121,8 @@ export const columns = (onDelete, onEnd) => {
         {
             key: 'Дії',
             title: 'Дії',
-            width: 80,
+            width: 60,
+            fixed: 'right',
             render: (record) => {
                 if (record.status) {
                     return null;

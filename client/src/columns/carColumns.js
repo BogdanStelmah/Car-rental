@@ -56,9 +56,9 @@ export const columns = (onDelete, navigate) => {
             title: 'Рейтинг',
             dataIndex: 'rating',
             sorter: {multiple: 7},
-            width: 170,
-            render: (record => {
-                return <Rate disabled allowHalf value={record}/>
+            width: 190,
+            render: (rating => {
+                return <div><Rate disabled allowHalf value={rating}/> {rating}</div>
             })
         },
         {

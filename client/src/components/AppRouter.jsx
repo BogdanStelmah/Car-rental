@@ -10,7 +10,7 @@ import {
     CAR_PAGE,
     CAR_ROUTER,
     CAR_TYPE_ROUTER,
-    LOGIN_ROUTE, RENTAL_ROUTER,
+    LOGIN_ROUTE, PASSPORT_DATA_CREATE_ROUTER, PASSPORT_DATA_EDIT_ROUTER, PASSPORT_DATA_ROUTER, RENTAL_ROUTER,
     USERS_ROUTER
 } from "./utils/consts";
 import CarsPage from "../pages/Car/CarsPage";
@@ -20,6 +20,9 @@ import CarEdit from "../pages/Car/CarEdit";
 import CarPage from "../pages/Car/CarPage";
 import CarTypesPage from "../pages/CarType/CarTypesPage";
 import RentalsPage from "../pages/Rentals/RentalsPage";
+import PassportDataPage from "../pages/PassportData/PassportDataPage";
+import PassportDataCreatePage from "../pages/PassportData/PassportDataCreatePage";
+import PassportDataEditPage from "../pages/PassportData/PassportDataEditPage";
 
 const AppRouter = () => {
     const isAuth = useSelector(state => state.auth.authenticated);
@@ -42,9 +45,16 @@ const AppRouter = () => {
                     <Route path={CAR_ROUTER} element={<CarsPage/>}/>
                     <Route path={CAR_EDIT} element={<CarEdit/>}/>
                     <Route path={CAR_PAGE} element={<CarPage/>}/>
+
                     <Route path={USERS_ROUTER} element={<UsersPage/>}/>
+
                     <Route path={CAR_TYPE_ROUTER} element={<CarTypesPage/>}/>
+
                     <Route path={RENTAL_ROUTER} element={<RentalsPage/>}/>
+
+                    <Route path={PASSPORT_DATA_ROUTER} element={<PassportDataPage/>}/>
+                    <Route path={PASSPORT_DATA_CREATE_ROUTER} element={<PassportDataCreatePage/>}/>
+                    <Route path={PASSPORT_DATA_EDIT_ROUTER} element={<PassportDataEditPage/>}/>
                 </Route>
                 <Route path='*' element={<Navigate to={ADMIN_ROUTE} replace />}>
 

@@ -2,11 +2,12 @@ const CustomError = require("../exceptions/custom-error");
 
 //Models
 const PassportDataModel = require('../models/PassportData');
+const UserModel = require("../models/User");
 
 //Services
 const cloudinaryService = require("../service/cloudinary-servise");
 const imageService = require("./image-servise");
-const UserModel = require("../models/User");
+const CarModel = require("../models/Car");
 
 class PassportDataService {
     async getPassportsData() {
@@ -48,6 +49,10 @@ class PassportDataService {
             return;
         }
 
+        this.updatePassportData(user.passportData, data, images)
+    }
+
+    async updatePassportData(id, data, images = []) {
         const update = {
             $set: {},
             $unset: {}
@@ -72,7 +77,25 @@ class PassportDataService {
             }
         });
 
-        await PassportDataModel.findById(user.passportData).update(update);
+        await PassportDataModel.findById(id).update(update);
+    }
+
+    async addImage(id, images) {
+        const uploadedResponse = await cloudinaryService.uploadToCloudinary(images, process.env.UPLOAD_PRESET_FOR_PASSPORT_DATA);
+        const imagesId = await imageService.saveImagesToDB(uploadedResponse);
+
+        const passportData = await PassportDataModel.findById(id);
+        passportData.imageLink.push(...imagesId);
+
+        await passportData.save();
+    }
+
+    async deleteImage(id, idImage) {
+        let passportData = await PassportDataModel.findById(id);
+        await imageService.deleteImage(idImage);
+
+        passportData.imageLink = passportData.imageLink.filter((image) => {return image._id.toString() !== idImage })
+        await passportData.save();
     }
 }
 

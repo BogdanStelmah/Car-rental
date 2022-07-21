@@ -13,7 +13,7 @@ module.exports = async function (req, res, next) {
         }
 
         next();
-    } catch (error) {
+    } catch (errors) {
         next(CustomError.BadRequestError('Помилка валідації', errors.array()));
     }
 }

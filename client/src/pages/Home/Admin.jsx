@@ -20,7 +20,13 @@ import {Avatar, Layout, Menu} from 'antd';
 
 import classes from "./Admin.module.css";
 import {Outlet, useNavigate} from "react-router-dom";
-import {CAR_ROUTER, CAR_TYPE_ROUTER, RENTAL_ROUTER, USERS_ROUTER} from "../../components/utils/consts";
+import {
+    CAR_ROUTER,
+    CAR_TYPE_ROUTER,
+    PASSPORT_DATA_ROUTER,
+    RENTAL_ROUTER,
+    USERS_ROUTER
+} from "../../components/utils/consts";
 
 const { Header, Content, Sider } = Layout;
 
@@ -73,17 +79,11 @@ const Admin = () => {
                     <Menu.Item key={4} onClick={() => {navigate(RENTAL_ROUTER)}}>
                         <UnorderedListOutlined /> Замовлення
                     </Menu.Item>
-                    <Menu.Item key={5}>
-                        <FileImageOutlined /> Картинки
+                    <Menu.Item key={8} onClick={() => {navigate(PASSPORT_DATA_ROUTER)}}>
+                        <SnippetsOutlined />Паспортні данні
                     </Menu.Item>
                     <Menu.Item key={6}>
                         <DatabaseOutlined /> DB Tools
-                    </Menu.Item>
-                    <Menu.Item key={7}>
-                        <HighlightOutlined /> Відгуки
-                    </Menu.Item>
-                    <Menu.Item key={8}>
-                        <SnippetsOutlined />Паспортні данні
                     </Menu.Item>
                     <Menu.Item onClick={logOut} key={9}>
                         <LogoutOutlined/> Вихід

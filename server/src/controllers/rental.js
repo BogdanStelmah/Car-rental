@@ -30,6 +30,7 @@ exports.getRentals = async (req, res, next) => {
                 as: 'user'
             }
         },
+            { $sort: {'status': 1} },
             {
                 $match: filters
             }

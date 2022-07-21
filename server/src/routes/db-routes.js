@@ -5,6 +5,8 @@ const dbController = require('../controllers/db-controller');
 
 const router = express.Router();
 
-router.post('/', dbController.restore);
+router.post('/restore', dbController.restore);
+
+router.post('/dump', dbController.dump);
 
 module.exports = router;

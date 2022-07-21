@@ -8,7 +8,7 @@ const COMMAND_MONGORESTORE = 'C:\\Users\\dubin\\Desktop\\mongodb-database-tools\
 
 function backupMongoDB() {
     const child = spawn(COMMAND_MONGODUMP, [
-        `--db=${process.env.DB_NAME}`,
+        `--uri=${process.env.MONGO_URL}`,
         `--archive=${ARCHIVE_PATH}`,
         `--gzip`
     ])
@@ -21,7 +21,7 @@ function backupMongoDB() {
 
 function restoreMongoDB() {
     const child = spawn(COMMAND_MONGORESTORE, [
-        `--db=${process.env.DB_NAME}`,
+        `--uri=${process.env.MONGO_URL}`,
         `--archive=${ARCHIVE_PATH}`,
         `--gzip`
     ])

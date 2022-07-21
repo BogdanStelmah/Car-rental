@@ -7,7 +7,11 @@ const passportDataController = require('../controllers/passportData-controller')
 
 const {param, body} = require("express-validator");
 const validationRes = require("../middleware/validationRes");
+
 const UserModel = require("../models/User");
+const PassportDataModel = require('../models/PassportData');
+const CustomError = require("../exceptions/custom-error");
+const ImageModel = require("../models/Image");
 
 const router = express.Router();
 
@@ -54,6 +58,7 @@ router.post('/:idUser', auth, rolesMiddleware,
         param('idUser')
             .isMongoId().withMessage("Неправильний формат id")
             .custom(async (value) => {
+                console.log('few')
                 const user = await UserModel.findOne({_id:value});
                 if (!user) {
                     throw new Error('Даного користувача не існує');
@@ -78,5 +83,59 @@ router.delete('/:id', auth, rolesMiddleware,
             .isMongoId().withMessage("Неправильний формат id")
     ],validationRes,
     passportDataController.delete);
+
+router.post('/photos/:id', auth, rolesMiddleware,
+    [
+        param('id')
+            .isMongoId().withMessage("Неправильний формат id")
+            .custom(async (value) => {
+                const user = await PassportDataModel.findById(value);
+                if (!user) {
+                    throw new Error('Даних записів не існує');
+                }
+                return value;
+            }),
+    ],
+    validationRes,
+    passportDataController.addPhotos)
+
+router.delete('/:id/photos/:idImage', auth, rolesMiddleware,
+    [
+        param('id')
+            .isMongoId().withMessage('Невірний формат id')
+            .custom(async (value) => {
+                const car = await PassportDataModel.findById(value);
+                if (!car) {
+                    throw CustomError.BadRequestError("Даного запису не існує");
+                }
+                return value;
+            }),
+        param('idImage')
+            .isMongoId().withMessage('Невірний формат id')
+            .custom(async (value) => {
+                const image = await ImageModel.findById(value);
+                if (!image) {
+                    throw CustomError.BadRequestError("Такої картнки не існує")
+                }
+            })
+    ], validationRes,
+    passportDataController.deleteImage)
+
+router.put('/:id', auth, rolesMiddleware,
+    [
+        param('id')
+            .isMongoId().withMessage('Невірний формат id')
+            .custom(async (value) => {
+                const car = await PassportDataModel.findById(value);
+                if (!car) {
+                    throw CustomError.BadRequestError("Даного запису не існує");
+                }
+                return value;
+            }),
+        body('phoneNumber')
+            .matches(/^\+?3?8?(0[5-9][0-9]\d{7})$/)
+            .withMessage('Номер телефону повинен бути формату +380XXXXXXXXX'),
+    ],validationRes,
+    passportDataController.put)
 
 module.exports = router;

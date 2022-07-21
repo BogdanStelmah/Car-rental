@@ -6,7 +6,6 @@ require('dotenv').config();
 const ImageModel = require('../models/Image');
 
 //Services
-const imageService = require('../service/image-servise');
 const carService = require("../service/car-servise");
 
 

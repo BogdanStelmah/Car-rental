@@ -60,7 +60,6 @@ const RentalsPage = () => {
     }
 
     const getRental = () => {
-        console.log({...params, ...filtersParams})
         RentalService.fetchRentals({...params, ...filtersParams}).then((response) => {
             setTotalPages(response?.totalCount)
             setDataSource(response?.rentals);
