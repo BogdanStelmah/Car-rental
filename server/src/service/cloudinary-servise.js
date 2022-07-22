@@ -23,4 +23,10 @@ const deleteFromCloudinary = async (file) => {
     )
 }
 
-module.exports = { uploadToCloudinary, deleteFromCloudinary }
+const getAllAssetsInFolder = async (directoryName) => {
+    const assets = await cloudinary.search.expression(`folder:${directoryName}`).execute()
+
+    return assets.resources.map((file) => {return {public_id: file.public_id, created_at: file.created_at}});
+}
+
+module.exports = { uploadToCloudinary, deleteFromCloudinary, getAllAssetsInFolder }

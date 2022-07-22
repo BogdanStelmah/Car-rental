@@ -12,6 +12,8 @@ import {RetweetOutlined, SearchOutlined} from "@ant-design/icons";
 const PassportDataPage = () => {
     const navigate = useNavigate();
 
+    const [isLoadingTable, setIsLoadingTable] = useState(true)
+
     const [dataSource, setDataSource] = useState();
     const [totalPages, setTotalPages] = useState(0);
     const [params, setParams] = useState({
@@ -37,7 +39,7 @@ const PassportDataPage = () => {
         if (birthdate) {
             data['birthdate'] = birthdate.format('YYYY-MM-DD')
         }
-
+        setIsLoadingTable(true);
         setFiltersParams({...data});
         setParams({...params, skip: 1})
     }
@@ -55,6 +57,7 @@ const PassportDataPage = () => {
             .then((response) => {
                 setTotalPages(response?.totalCount)
                 setDataSource(response?.passportsData);
+                setIsLoadingTable(false)
             })
     }
 
@@ -63,6 +66,7 @@ const PassportDataPage = () => {
     }, [params, filtersParams])
 
     const handleTableChange = (newPagination, filters, sorter) => {
+        setIsLoadingTable(true);
         const newParams = queryParser(newPagination, filters, sorter)
         setParams({...newParams});
     }
@@ -74,6 +78,7 @@ const PassportDataPage = () => {
             okType: "danger",
             cancelText: "Відміна",
             onOk: () => {
+                setIsLoadingTable(true)
                 PasswordDataService.deletePassportData(record._id)
                     .then(() => {
                         message.success('Успішно видалено')
@@ -159,6 +164,7 @@ const PassportDataPage = () => {
                 </div>
             </div>
             <Table
+                loading={isLoadingTable}
                 columns={columns(onDeleteType, navigate)}
                 dataSource={dataSource}
                 pagination={{

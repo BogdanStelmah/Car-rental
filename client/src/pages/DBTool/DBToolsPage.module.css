@@ -1,0 +1,35 @@
+h1 {
+    font-size: 25px;
+}
+
+.list__item {
+    background-color: white;
+    margin: 0 15px 15px 0;
+    font-size: 16px;
+    width: 200px;
+}
+
+.item__title {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 15px;
+    border-bottom: 1px solid #adadad;
+}
+
+.item__info {
+    font-size: 14px;
+    padding: 10px;
+}
+
+.block__info {
+    display: flex;
+}
+
+.example {
+    margin: 20px 0;
+    margin-bottom: 20px;
+    padding: 30px 50px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}

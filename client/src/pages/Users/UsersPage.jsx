@@ -13,6 +13,9 @@ import PasswordDataService from "../../services/PasswordDataService";
 import PassportDataTDO from "./DTO/PassportDataTDO";
 import {columns} from "../../columns/userColumns";
 import classes from "./User.module.css";
+import DiagramAdmin from "../../components/DiagramsUser/diagramAdmin";
+import {Bar} from "@ant-design/plots";
+import TopUsers from "../../components/DiagramsUser/topUsers";
 
 const { Option } = Select;
 
@@ -252,6 +255,8 @@ const UsersPage = () => {
                     </Form.Item>
                 </Form>
             </Modal>
+            <DiagramAdmin/>
+            <TopUsers/>
         </div>
     );
 };

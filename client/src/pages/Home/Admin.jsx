@@ -8,9 +8,7 @@ import {
     LogoutOutlined,
     CarOutlined,
     SnippetsOutlined,
-    HighlightOutlined,
     UnorderedListOutlined,
-    FileImageOutlined,
     FormatPainterOutlined,
     DatabaseOutlined,
 
@@ -22,7 +20,7 @@ import classes from "./Admin.module.css";
 import {Outlet, useNavigate} from "react-router-dom";
 import {
     CAR_ROUTER,
-    CAR_TYPE_ROUTER,
+    CAR_TYPE_ROUTER, DB_TOOLS_ROUTER,
     PASSPORT_DATA_ROUTER,
     RENTAL_ROUTER,
     USERS_ROUTER
@@ -82,7 +80,7 @@ const Admin = () => {
                     <Menu.Item key={8} onClick={() => {navigate(PASSPORT_DATA_ROUTER)}}>
                         <SnippetsOutlined />Паспортні данні
                     </Menu.Item>
-                    <Menu.Item key={6}>
+                    <Menu.Item key={6} onClick={() => {navigate(DB_TOOLS_ROUTER)}}>
                         <DatabaseOutlined /> DB Tools
                     </Menu.Item>
                     <Menu.Item onClick={logOut} key={9}>

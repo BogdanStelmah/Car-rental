@@ -9,4 +9,6 @@ router.post('/restore', dbController.restore);
 
 router.post('/dump', dbController.dump);
 
+router.get('/statistics', dbController.statistics);
+
 module.exports = router;

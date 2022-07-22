@@ -7,7 +7,6 @@ const UserModel = require("../models/User");
 //Services
 const cloudinaryService = require("../service/cloudinary-servise");
 const imageService = require("./image-servise");
-const CarModel = require("../models/Car");
 
 class PassportDataService {
     async getPassportsData() {

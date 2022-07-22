@@ -9,7 +9,6 @@ const imageService = require("../service/image-servise");
 
 //Models
 const PassportDataModel = require('../models/PassportData');
-const carService = require("../service/car-servise");
 
 
 exports.get = async (req, res, next) => {
@@ -140,7 +139,7 @@ exports.put = async (req, res, next) => {
         passportDataService.updatePassportData(req.params.id, req.body);
 
         res.status(200).json({
-            message: "Данні про автомобіль оновленно"
+            message: "Паспортні дані оновленно"
         })
     } catch (e) {
         next(e);

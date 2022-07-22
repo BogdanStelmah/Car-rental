@@ -50,9 +50,11 @@ const PassportDataEditPage = () => {
         setIsLoading(true);
         let formCarData = new FormData();
 
-        value.birthdate = value.birthdate.format('YYYY-MM-DD');
-        formCarData.append("birthdate", value.birthdate)
-        delete value.birthdate;
+        if (value.birthdate) {
+            value.birthdate = value.birthdate.format('YYYY-MM-DD');
+            formCarData.append("birthdate", value.birthdate)
+            delete value.birthdate;
+        }
 
         for (const valueKey in value) {
             formCarData.append(valueKey, value[valueKey]);
@@ -70,11 +72,13 @@ const PassportDataEditPage = () => {
                 PasswordDataService.addPhotos(id, formImageData)
                     .then((response) => {
                         navigate(-1);
-                        setIsLoading(false);
                     })
             })
             .catch((error) => {
                 messageError(error);
+            })
+            .finally(() => {
+                setIsLoading(false);
             })
 
     }
@@ -106,7 +110,7 @@ const PassportDataEditPage = () => {
     return (
         <div>
             <Button onClick={() => {navigate(-1)}}><ArrowLeftOutlined />Повернутися назад</Button>
-            <h1 className={classes.h1}>Редагування даних автомобіля</h1>
+            <h1 className={classes.h1}>Редагування паспортних даних</h1>
             <Form
                 form={form}
                 style={{ width: '400px' }}

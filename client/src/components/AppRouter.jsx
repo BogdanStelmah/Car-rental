@@ -9,7 +9,7 @@ import {
     CAR_EDIT,
     CAR_PAGE,
     CAR_ROUTER,
-    CAR_TYPE_ROUTER,
+    CAR_TYPE_ROUTER, DB_TOOLS_ROUTER,
     LOGIN_ROUTE, PASSPORT_DATA_CREATE_ROUTER, PASSPORT_DATA_EDIT_ROUTER, PASSPORT_DATA_ROUTER, RENTAL_ROUTER,
     USERS_ROUTER
 } from "./utils/consts";
@@ -23,6 +23,7 @@ import RentalsPage from "../pages/Rentals/RentalsPage";
 import PassportDataPage from "../pages/PassportData/PassportDataPage";
 import PassportDataCreatePage from "../pages/PassportData/PassportDataCreatePage";
 import PassportDataEditPage from "../pages/PassportData/PassportDataEditPage";
+import DbToolsPage from "../pages/DBTool/DBToolsPage";
 
 const AppRouter = () => {
     const isAuth = useSelector(state => state.auth.authenticated);
@@ -55,6 +56,8 @@ const AppRouter = () => {
                     <Route path={PASSPORT_DATA_ROUTER} element={<PassportDataPage/>}/>
                     <Route path={PASSPORT_DATA_CREATE_ROUTER} element={<PassportDataCreatePage/>}/>
                     <Route path={PASSPORT_DATA_EDIT_ROUTER} element={<PassportDataEditPage/>}/>
+
+                    <Route path={DB_TOOLS_ROUTER} element={<DbToolsPage/>}/>
                 </Route>
                 <Route path='*' element={<Navigate to={ADMIN_ROUTE} replace />}>
 
