@@ -68,4 +68,12 @@ export class CarService {
         });
         return response?.data;
     }
+
+    static async getRatingCarsRental() {
+        const response = await $api({
+            method: 'get',
+            url: `car/rentalCarsRating`,
+        });
+        return response?.data;
+    }
 }

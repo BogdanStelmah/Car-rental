@@ -88,6 +88,8 @@ router.get('/', carController.getCars);
 
 router.get('/colors', carController.getColors);
 
+router.get('/rentalCarsRating', carController.rentalCarsRating);
+
 router.get('/:id',
     checkExistCar(),
     validationRes,
@@ -131,7 +133,7 @@ router.get('/:id/review',
 );
 
 // POST /car/:id/review
-router.post('/:id/review', authMiddleware,
+router.post('/:id/review', authMiddleware, rolesMiddleware,
     [
         body('customer')
             .exists()
@@ -161,7 +163,7 @@ router.post('/:id/review', authMiddleware,
 );
 
 // DELETE /car/review/:idReview
-router.delete('/review/:idReview', authMiddleware,
+router.delete('/review/:idReview', authMiddleware, rolesMiddleware,
     [
         param('idReview')
             .isMongoId().withMessage("Невірний формат id")

@@ -2,6 +2,8 @@ const User = require('../models/User');
 const userService = require('../service/user-service');
 const CustomError = require("../exceptions/custom-error");
 const {queryParser} = require("../utils/queryParser");
+const UserModel = require('../models/User');
+const RentalModel = require('../models/Rental');
 
 exports.getUsers = async (req, res, next) => {
     try {
@@ -124,6 +126,62 @@ exports.editUser = async (req, res, next) => {
 
         res.status(200).json({
             message: "Дані оновлено"
+        })
+    } catch (e) {
+        next(e);
+    }
+}
+
+exports.countUserByRole = async (req, res, next) => {
+    try {
+        let countUser = await UserModel.aggregate([
+            {
+                $group: {
+                    _id: "$is_superuser",
+                    count: {
+                        $count: {}
+                    }
+                }
+            }
+        ])
+
+        countUser = countUser.map((data) => {
+            return {...data, _id: data._id ? 'Адмін' : 'Менеджер'}
+        })
+
+        res.status(200).json({
+            countUser: countUser
+        })
+    } catch (e) {
+        next(e);
+    }
+}
+
+exports.topUsersForRentals = async (req, res, next) => {
+    try {
+        let topUsers = await RentalModel.aggregate([{
+            $group: {
+                _id: "$admin",
+                count: { $count: {} }
+            }
+        }, {
+            $sort: { count: -1 }
+        }, {
+            $lookup: {
+                from: 'users',
+                localField: '_id',
+                foreignField: '_id',
+                as: '_id'
+            }
+        },
+        ])
+
+        topUsers.map((data) => {
+            return data._id = data._id[0].email
+        })
+
+        res.status(200).json({
+            topUsers: topUsers
         })
     } catch (e) {
         next(e);

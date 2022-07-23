@@ -158,3 +158,48 @@ exports.endRental = async (req, res, next) => {
         next(e);
     }
 }
+
+exports.getStatistics = async (req, res, next) => {
+    try {
+        const { filters } = await queryParser(req.query, RentalModel);
+
+        const period = req.query.period || 'day';
+        format = {'day': '%Y-%m-%d', 'month': '%Y-%m', 'year': '%Y'};
+
+
+        const rentalsStatistics = await RentalModel
+            .aggregate([
+                {
+                    $match: {...filters, 'status': true}
+                },
+                {
+                    $project: {
+                        "paymentAmount": "$paymentAmount",
+                        "createdAt": {
+                            $dateToString: {
+                                "format": format[period],
+                                "date": "$createdAt"
+                            }
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$createdAt",
+                        amount: { $sum: "$paymentAmount" },
+                        count: { $count: {} },
+                    }
+                },
+                {
+                    $sort: {'_id': 1}
+                }
+            ])
+
+        res.status(200).json({
+            message: "Fetched statistic successfully.",
+            rentalsStatistics: rentalsStatistics,
+        })
+    } catch (e) {
+        next(e);
+    }
+}

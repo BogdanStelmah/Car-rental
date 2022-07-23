@@ -7,11 +7,15 @@ const CarModel = require("../models/Car");
 const PassportDataModel = require('../models/PassportData');
 const rentalController = require('../controllers/rental');
 const authMiddleware = require("../middleware/auth");
+const roleMiddleware = require("../middleware/role");
 
 const router = express.Router();
 
 //GET /rental/
 router.get('/', rentalController.getRentals)
+
+//GEt /rental/statistics
+router.get('/statistics', rentalController.getStatistics);
 
 //GET /rental/:id
 router.get('/:id',
@@ -30,7 +34,7 @@ router.get('/:id',
     rentalController.getRental)
 
 //POST /rental
-router.post('/', authMiddleware,
+router.post('/', authMiddleware, roleMiddleware,
     [
         body('car')
             .custom(async (value) => {
@@ -57,7 +61,7 @@ router.post('/', authMiddleware,
     rentalController.postRental)
 
 //PUT /rental/:id
-router.put('/:id', authMiddleware,
+router.put('/:id', authMiddleware, roleMiddleware,
     [
         param('id')
             .isMongoId().withMessage('Невірний формат id')
@@ -73,7 +77,7 @@ router.put('/:id', authMiddleware,
     rentalController.endRental)
 
 //DELETE /rental/:id
-router.delete('/:id', authMiddleware,
+router.delete('/:id', authMiddleware, roleMiddleware,
     [
         param('id')
             .isMongoId().withMessage('Невірний формат id')

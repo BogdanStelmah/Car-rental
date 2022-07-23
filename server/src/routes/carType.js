@@ -3,6 +3,7 @@ const carTypeController = require('../controllers/carType');
 const { body, param } = require('express-validator');
 const CarType = require('../models/CarType');
 const auth = require('../middleware/auth');
+const rolesMiddleware = require('../middleware/role');
 const validationRes = require('../middleware/validationRes');
 
 const router = express.Router();
@@ -10,6 +11,7 @@ const router = express.Router();
 // GET /carType
 router.get('/', carTypeController.getCarTypes);
 
+router.get('/countCarsForCategory', carTypeController.countCarsForCategory);
 
 // GET /carType/:idType
 router.get('/:idType',
@@ -28,7 +30,7 @@ carTypeController.getCarType);
 
 
 // POST /carType
-router.post('/', auth,
+router.post('/', auth, rolesMiddleware,
 [
     body('type')
         .exists()
@@ -50,7 +52,7 @@ carTypeController.postCarType);
 
 
 // DELETE /carType/:idType
-router.delete('/:idType', auth, 
+router.delete('/:idType', auth, rolesMiddleware,
 [
     param('idType')
         .isMongoId().withMessage("Невірний формат id")
@@ -66,7 +68,7 @@ carTypeController.deleteCarType);
 
 
 // PUT /carType/:idType
-router.put('/:idType', auth,
+router.put('/:idType', auth, rolesMiddleware,
 [
     param('idType')
         .isMongoId().withMessage("Невірний формат id")

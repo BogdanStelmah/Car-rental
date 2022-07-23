@@ -27,6 +27,7 @@ import DbToolsPage from "../pages/DBTool/DBToolsPage";
 
 const AppRouter = () => {
     const isAuth = useSelector(state => state.auth.authenticated);
+    const authUser = useSelector(state => state.auth.user);
 
     return (
         !isAuth

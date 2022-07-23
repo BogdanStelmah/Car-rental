@@ -18,7 +18,7 @@ const PassportDataPage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [params, setParams] = useState({
         skip: 1,
-        limit: 5
+        limit: 6
     });
 
     const [searchText, setSearchText] = useState(null)

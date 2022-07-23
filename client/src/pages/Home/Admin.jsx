@@ -74,15 +74,19 @@ const Admin = () => {
                     <Menu.Item key={3} onClick={() => {navigate(CAR_TYPE_ROUTER)}}>
                         <FormatPainterOutlined /> Типи автомобілів
                     </Menu.Item>
-                    <Menu.Item key={4} onClick={() => {navigate(RENTAL_ROUTER)}}>
-                        <UnorderedListOutlined /> Замовлення
-                    </Menu.Item>
-                    <Menu.Item key={8} onClick={() => {navigate(PASSPORT_DATA_ROUTER)}}>
-                        <SnippetsOutlined />Паспортні данні
-                    </Menu.Item>
-                    <Menu.Item key={6} onClick={() => {navigate(DB_TOOLS_ROUTER)}}>
-                        <DatabaseOutlined /> DB Tools
-                    </Menu.Item>
+                    {user.is_superuser &&
+                        <>
+                            <Menu.Item key={4} onClick={() => {navigate(RENTAL_ROUTER)}}>
+                                <UnorderedListOutlined/> Замовлення
+                            </Menu.Item>
+                            <Menu.Item key={8} onClick={() => {navigate(PASSPORT_DATA_ROUTER)}}>
+                                <SnippetsOutlined />Паспортні данні
+                            </Menu.Item>
+                            <Menu.Item key={6} onClick={() => {navigate(DB_TOOLS_ROUTER)}}>
+                                <DatabaseOutlined /> DB Tools
+                            </Menu.Item>
+                        </>
+                    }
                     <Menu.Item onClick={logOut} key={9}>
                         <LogoutOutlined/> Вихід
                     </Menu.Item>

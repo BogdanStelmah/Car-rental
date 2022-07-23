@@ -7,6 +7,7 @@ import classes from './CarCreatePage.module.css';
 import {ReviewsService} from "../../services/ReviewsService";
 import PasswordDataService from "../../services/PasswordDataService";
 import RentalService from "../../services/RentalService";
+import {useSelector} from "react-redux";
 
 const CarPage = () => {
     const [form] = Form.useForm();
@@ -16,6 +17,7 @@ const CarPage = () => {
     const [carReviews, setCarReviews] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [passportsData, serPassportsData] = useState(null);
+    const authUser = useSelector(state => state.auth.user);
 
     useEffect(() => {
         CarService.fetchCar(id)
@@ -113,6 +115,7 @@ const CarPage = () => {
                         </div>
                         <div><span>Вартість оренди: </span>{car?.price}</div>
                     </div>
+                    {authUser.is_superuser &&
                     <div>
                         {!car?.status &&
                         <Button onClick={() => {
@@ -121,8 +124,8 @@ const CarPage = () => {
                             Оформити оренду
                         </Button>
                         }
-
                     </div>
+                    }
                 </div>
 
                 <div className={classes.reviews__car}>

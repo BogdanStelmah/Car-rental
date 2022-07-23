@@ -35,4 +35,12 @@ export default class CarTypeService {
         });
         return response?.data;
     }
+
+    static async countCarsForCategory() {
+        const response = await $api({
+            method: 'get',
+            url: 'carType/countCarsForCategory',
+        })
+        return response?.data;
+    }
 }

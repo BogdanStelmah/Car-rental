@@ -4,8 +4,8 @@ import React from "react";
 import {ADMIN_ROUTE} from "../components/utils/consts";
 import {Link} from "react-router-dom";
 
-export const columns = (onDelete, navigate) => {
-    return [
+export const columns = (onDelete, navigate, authUser) => {
+    const columns = [
         {
             key: '1',
             title: '',
@@ -80,23 +80,30 @@ export const columns = (onDelete, navigate) => {
             width: 130,
             sorter: {multiple: 9},
         },
-        {
-            key: '5',
-            title: 'Дії',
-            width: 80,
-            render: (record) => {
-                return (
-                    <>
-                        <EditOutlined
-                            onClick={() => {navigate(ADMIN_ROUTE + `/cars/${record._id}/edit`)}}
-                        />
-                        <DeleteOutlined
-                            onClick={() => {onDelete(record);}}
-                            style={{color: '#d02828', marginLeft: 12}}
-                        />
-                    </>
-                )
-            }
-        }
     ]
+
+    if (authUser.is_superuser) {
+        columns.push(
+            {
+                key: '5',
+                title: 'Дії',
+                width: 80,
+                render: (record) => {
+                    return (
+                        <>
+                            <EditOutlined
+                                onClick={() => {navigate(ADMIN_ROUTE + `/cars/${record._id}/edit`)}}
+                            />
+                            <DeleteOutlined
+                                onClick={() => {onDelete(record);}}
+                                style={{color: '#d02828', marginLeft: 12}}
+                            />
+                        </>
+                    )
+                }
+            }
+        )
+    }
+
+    return columns;
 }

@@ -4,6 +4,7 @@ const path = require("path");
 
 //Models
 const CarModel = require('../models/Car');
+const RentalModel = require('../models/Rental');
 
 //Services
 const carService = require("../service/car-servise");
@@ -144,4 +145,37 @@ exports.deleteCar = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.rentalCarsRating = async (req, res, next) => {
+    try {
+        const carRating = await RentalModel.aggregate([
+            {
+                $group: {
+                    _id: "$car",
+                    count: {$count: {}}
+                }
+            },
+            { $sort: {count: -1} },
+            {
+                $lookup: {
+                    from: 'cars',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: '_id'
+                }
+            },
+        ])
+
+        carRating.map((data) => {
+            return data._id = data._id[0].name;
+        })
+
+        res.status(200).json({
+            message: "Рейтинг успішно отримано",
+            carRating: carRating
+        });
+    } catch (e) {
+        next(e);
+    }
+}
 

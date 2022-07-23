@@ -145,4 +145,8 @@ router.get('/:userId/review',
 // GET /user/myComments
 router.get('/myComments', authMiddleware, reviewController.getMyComments);
 
+router.get('/countUserByRole', userControllers.countUserByRole)
+
+router.get('/usersForRentals', userControllers.topUsersForRentals)
+
 module.exports = router;

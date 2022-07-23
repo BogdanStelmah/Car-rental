@@ -3,7 +3,7 @@ import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import React from "react";
 
 export const columns = (onDeleteUser, onEditUser, authUser) => {
-    return [
+    let columns = [
         {
             key: 'passportData.lastname',
             title: 'Прізвище',
@@ -57,31 +57,38 @@ export const columns = (onDeleteUser, onEditUser, authUser) => {
                 return record.replace('T', ' ').split('.')[0];
             }),
             sorter: {multiple: 4}
-        },
-        {
-            key: '5',
-            title: 'Дії',
-            render: (record) => {
-                if (authUser._id === record._id) {
-                    return (
-                        <EditOutlined
-                            onClick={() => {onEditUser(record);}}
-                        />
-                    )
-                }
-                return (
-                    <>
-                        <EditOutlined
-                            onClick={() => {onEditUser(record);}}
-                        />
-                        <DeleteOutlined
-                            onClick={() => {onDeleteUser(record);}}
-                            style={{color: '#d02828', marginLeft: 12}}
-                        />
-                    </>
-                )
-            }
         }
     ]
+
+    if (authUser.is_superuser) {
+        columns.push(
+            {
+                key: '5',
+                title: 'Дії',
+                render: (record) => {
+                    if (authUser._id === record._id) {
+                        return (
+                            <EditOutlined
+                                onClick={() => {onEditUser(record);}}
+                            />
+                        )
+                    }
+                    return (
+                        <>
+                            <EditOutlined
+                                onClick={() => {onEditUser(record);}}
+                            />
+                            <DeleteOutlined
+                                onClick={() => {onDeleteUser(record);}}
+                                style={{color: '#d02828', marginLeft: 12}}
+                            />
+                        </>
+                    )
+                }
+            }
+        )
+    }
+
+    return columns;
 }
 

@@ -1,12 +1,31 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Bar} from "@ant-design/plots";
+import UserService from "../../services/UserService";
 
 const TopUsers = () => {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        UserService.getTopUsersForRental()
+            .then((response) => {
+                setData(response.topUsers);
+            })
+    }, [])
+
+    const config = {
+        data,
+        xField: 'count',
+        yField: '_id',
+        seriesField: '_id',
+        legend: {
+            position: 'top-left',
+        },
+    };
 
     return (
         <div>
-            <h1>Топ 5 працівників</h1>
-            {/*<Bar {...config} style={{height: 350}}/>*/}
+            <h1>Топ працівників з оформлення договорів оренди</h1>
+            <Bar {...config} style={{height: 150}}/>
         </div>
     );
 };

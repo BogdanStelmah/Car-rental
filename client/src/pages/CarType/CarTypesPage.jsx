@@ -7,8 +7,12 @@ import {AppstoreAddOutlined} from "@ant-design/icons";
 import Input from "antd/es/input/Input";
 import Search from "antd/es/input/Search";
 import TextArea from "antd/es/input/TextArea";
+import CountCarsForCategory from "../../components/DiagramsType/countCarsForCategory";
+import {useSelector} from "react-redux";
 
 const CarTypesPage = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const authUser = useSelector(state => state.auth.user);
     const [form] = Form.useForm();
     const [formCreate] = Form.useForm();
     const [isEdit, setIsEdit] = useState(false);
@@ -20,13 +24,15 @@ const CarTypesPage = () => {
     const [searchText, setSearchText] = useState();
     const [params, setParams] = useState({
         skip: 1,
-        limit: 5
+        limit: 8
     });
 
     const getCarTypes = () => {
+        setIsLoading(true);
         CarTypeService.fetchCarTypes({...params, ...searchText}).then((response) => {
             setTotalPages(response?.totalCount)
             setDataSource(response?.carTypes);
+            setIsLoading(false);
         })
     }
 
@@ -54,6 +60,7 @@ const CarTypesPage = () => {
             okType: "danger",
             cancelText: "Відміна",
             onOk: () => {
+                setIsLoading(true);
                 CarTypeService.deleteCarType(record._id)
                     .then(() => {
                         message.success('Успішно видалено')
@@ -73,6 +80,8 @@ const CarTypesPage = () => {
     }
 
     const editType = (value) => {
+        setIsLoading(true);
+
         const data = {}
         for (const valueKey in value) {
             data[valueKey] = value[valueKey];
@@ -96,6 +105,7 @@ const CarTypesPage = () => {
     }
 
     const createType = (value) => {
+        setIsLoading(true);
         const data = {}
         for (const valueKey in value) {
             data[valueKey] = value[valueKey];
@@ -116,14 +126,22 @@ const CarTypesPage = () => {
 
                 message.error(messageText)
             })
+            .finally(() => {
+                setIsLoading(false);
+            })
     }
 
     return (
         <div>
             <Search placeholder="Пошук..." allowClear onSearch={handleTextSearch} style={{ width: 200, marginBottom: '10px' }} size="large"/>
-            <Button size="large" onClick={() => {setIsCreate(true)}}><AppstoreAddOutlined />Додати категорію</Button>
+            {authUser.is_superuser &&
+                <Button size="large" onClick={() => {
+                    setIsCreate(true)
+                }}><AppstoreAddOutlined/>Додати категорію</Button>
+            }
             <Table
-                columns={columns(onDeleteType, onEditCType)}
+                loading={isLoading}
+                columns={columns(onDeleteType, onEditCType, authUser)}
                 dataSource={dataSource}
                 pagination={{
                     total: totalPages,
@@ -197,6 +215,7 @@ const CarTypesPage = () => {
                     </Form.Item>
                 </Form>
             </Modal>
+            <CountCarsForCategory/>
         </div>
     );
 };

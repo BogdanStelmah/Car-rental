@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {Bar} from "@ant-design/plots";
-import UserService from "../../services/UserService";
+import {CarService} from "../../services/CarService";
 
-const DiagramAdmin = () => {
+const RatingCarsRental = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        UserService.getCountUsersByRole()
+        CarService.getRatingCarsRental()
             .then((response) => {
-                setData(response.countUser);
+                setData(response.carRating);
             })
     }, [])
 
@@ -20,14 +20,22 @@ const DiagramAdmin = () => {
         legend: {
             position: 'top-left',
         },
+        tooltip: {
+            fields: ['count'],
+        },
+        meta: {
+            _id: {
+                alias: 'Кількість оренд'
+            },
+        },
     };
 
     return (
         <div>
-            <h1>Діаграма ролей</h1>
+            <h1>Рейтинг автомобілей по кількості оренд</h1>
             <Bar {...config} style={{height: 150}}/>
         </div>
     );
 };
 
-export default DiagramAdmin;
+export default RatingCarsRental;

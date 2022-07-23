@@ -8,6 +8,7 @@ import {ReviewsService} from "../../services/ReviewsService";
 import {Option} from "antd/es/mentions";
 import {RetweetOutlined, SearchOutlined} from "@ant-design/icons";
 import classes from "./RentalsPage.module.css";
+import RentalStatistics from "../../components/DiagramsRental/rentalStatistics";
 const { RangePicker } = DatePicker;
 
 const RentalsPage = () => {
@@ -15,7 +16,7 @@ const RentalsPage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [params, setParams] = useState({
         skip: 1,
-        limit: 5
+        limit: 8
     });
     const [isEndRental, setIsEndRental] = useState(false);
     const [form] = Form.useForm();
@@ -248,6 +249,7 @@ const RentalsPage = () => {
                     </Form.Item>
                 </Form>
             </Modal>
+            <RentalStatistics/>
         </div>
     );
 };

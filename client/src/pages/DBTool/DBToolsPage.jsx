@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import DBService from "../../services/DBService";
-import {Button, Card, message, Row, Spin} from "antd";
+import {Button, message, Modal, Row, Spin} from "antd";
 import classes from './DBToolsPage.module.css'
 
 const DbToolsPage = () => {
@@ -24,25 +24,41 @@ const DbToolsPage = () => {
     }, [])
 
     const backup = () => {
-        setIsClickButton(true)
-        setIsLoading(true);
-        DBService.dumpDatabase()
-            .then(() => {
-                message.success('Резервне копіювання бази даних успішно виконано')
-                setIsClickButton(false)
-                getCollectionSizes();
-            })
+        Modal.confirm({
+            title: "Ви впевнені, що хочете зробити резервне копіювання бази даних?",
+            okText: "Так",
+            okType: "danger",
+            cancelText: "Відміна",
+            onOk: () => {
+                setIsClickButton(true)
+                setIsLoading(true);
+                DBService.dumpDatabase()
+                    .then(() => {
+                        message.success('Резервне копіювання бази даних успішно виконано')
+                        setIsClickButton(false)
+                        getCollectionSizes();
+                    })
+            }
+        });
     }
 
     const restore = () => {
-        setIsClickButton(true)
-        setIsLoading(true);
-        DBService.restoreDatabase()
-            .then(() => {
-                message.success('Відновлення бази даних успішно виконано')
-                setIsClickButton(false)
-                getCollectionSizes();
-            })
+        Modal.confirm({
+            title: "Ви впевнені, що хочете зробити відновлення бази даних?",
+            okText: "Так",
+            okType: "danger",
+            cancelText: "Відміна",
+            onOk: () => {
+                setIsClickButton(true)
+                setIsLoading(true);
+                DBService.restoreDatabase()
+                    .then(() => {
+                        message.success('Відновлення бази даних успішно виконано')
+                        setIsClickButton(false)
+                        getCollectionSizes();
+                    })
+            }
+        });
     }
 
     return (

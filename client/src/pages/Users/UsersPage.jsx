@@ -14,42 +14,45 @@ import PassportDataTDO from "./DTO/PassportDataTDO";
 import {columns} from "../../columns/userColumns";
 import classes from "./User.module.css";
 import DiagramAdmin from "../../components/DiagramsUser/diagramAdmin";
-import {Bar} from "@ant-design/plots";
 import TopUsers from "../../components/DiagramsUser/topUsers";
 
 const { Option } = Select;
 
 const UsersPage = () => {
-    const [valueIsSuperUser, setValueIsSuperUser] = useState('any')
+    const [isLoading, setIsLoading] = useState(true);
+    const [valueIsSuperUser, setValueIsSuperUser] = useState('any');
 
     const [searchByField, setSearchByField] = useState('email');
-    const [searchText, setSearchText] = useState()
+    const [searchText, setSearchText] = useState();
     const [paramSearch, setParamSearch] = useState();
 
     const [totalPages, setTotalPages] = useState(0);
     const [paramTable, setParamTable] = useState({
         skip: 1,
-        limit: 5
+        limit: 7
     });
 
     const [isEdit, setIsEdit] = useState(false);
-    const [editingUser, setEditingUser] = useState(null)
+    const [editingUser, setEditingUser] = useState(null);
     const [passportData, setPassportData] = useState({
         firstname: '',
         lastname: '',
         secondName: ''
     });
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
-    const authUser = useSelector(state => state.auth.user)
+    const authUser = useSelector(state => state.auth.user);
+    const isSuperuser = useSelector(state => state.auth.user.is_superuser);
     const allUser = useSelector(state => state.user);
 
     const search = () => {
+        setIsLoading(true);
         setParamSearch({[searchByField]: searchText, ['is_superuser']: valueIsSuperUser});
     }
 
     const handleTableChange = (newPagination, filters, sorter) => {
+        setIsLoading(true);
         setParamTable(queryParser(newPagination, filters, sorter));
     }
 
@@ -65,6 +68,7 @@ const UsersPage = () => {
         UserService.fetchUsers({...paramTable, ...paramSearch}).then((response) => {
             setTotalPages(response.totalCount)
             dispatch(setUser(response.users));
+            setIsLoading(false);
         })
     }
 
@@ -95,6 +99,8 @@ const UsersPage = () => {
 
 
     const handleRequest = () => {
+        setIsLoading(true);
+
         dispatch(editUser(editingUser))
 
         const formData = new FormData();
@@ -107,6 +113,9 @@ const UsersPage = () => {
                 getUsers()
             })
             .catch()
+            .finally(() => {
+                setIsLoading(false);
+            })
     }
 
     const onDeleteUser = (record) => {
@@ -116,6 +125,7 @@ const UsersPage = () => {
             okType: "danger",
             cancelText: "Відміна",
             onOk: () => {
+                setIsLoading(true);
                 dispatch(deleteUser(record._id));
                 getUsers()
             }
@@ -185,7 +195,7 @@ const UsersPage = () => {
                 </div>
             </div>
             <Table
-                loading={allUser.loading}
+                loading={isLoading}
                 columns={columns(onDeleteUser, onEditUser, authUser)}
                 dataSource={allUser.users}
                 pagination={{
@@ -244,6 +254,7 @@ const UsersPage = () => {
                             })}
                         />
                     </Form.Item>
+                    {editingUser?._id !== authUser?._id &&
                     <Form.Item>
                         <Checkbox checked={editingUser?.is_superuser} onChange={(event => {
                             setEditingUser(pre => {
@@ -253,6 +264,7 @@ const UsersPage = () => {
                             Роль адміністратора
                         </Checkbox>
                     </Form.Item>
+                    }
                 </Form>
             </Modal>
             <DiagramAdmin/>

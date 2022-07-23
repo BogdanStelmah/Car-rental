@@ -29,4 +29,20 @@ export default class UserService {
         })
         return response?.data;
     }
+
+    static async getCountUsersByRole() {
+        const response = await $api({
+            method: 'get',
+            url: 'user/countUserByRole',
+        })
+        return response?.data;
+    }
+
+    static async getTopUsersForRental() {
+        const response = await $api({
+            method: 'get',
+            url: 'user/usersForRentals',
+        })
+        return response?.data;
+    }
 }

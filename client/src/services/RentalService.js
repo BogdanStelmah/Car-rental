@@ -34,4 +34,13 @@ export default class RentalService {
         });
         return response?.data;
     }
+
+    static async statistics(params) {
+        const response = await $api({
+            method: 'get',
+            url: 'rental/statistics',
+            params: params
+        });
+        return response?.data;
+    }
 }

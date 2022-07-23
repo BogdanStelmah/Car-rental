@@ -9,9 +9,14 @@ import classes from './CarCreatePage.module.css';
 import {Option} from "antd/es/mentions";
 import CarTypeService from "../../services/CarTypeService";
 import {SearchOutlined, RetweetOutlined} from "@ant-design/icons";
+import RatingCarsRental from "../../components/DiagramsCar/ratingCarsRental";
+import {useSelector} from "react-redux";
 
 const CarsPage = () => {
     let navigate = useNavigate();
+    const authUser = useSelector(state => state.auth.user);
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const [carTypes, setCarTypes] = useState(null);
     const [carColor, setCarColor] = useState(null);
@@ -22,7 +27,7 @@ const CarsPage = () => {
     const [searchParams, setSearchParams] = useState()
     const [params, setParams] = useState({
         skip: 1,
-        limit: 5
+        limit: 6
     });
 
     //filters
@@ -81,9 +86,11 @@ const CarsPage = () => {
     }
 
     const getCar = () => {
+        setIsLoading(true);
         CarService.fetchCars({...params, ...searchParams}).then((response) => {
-            setTotalPages(response.totalCount)
+            setTotalPages(response.totalCount);
             setDataSource(response.cars);
+            setIsLoading(false);
         })
     }
 
@@ -122,7 +129,9 @@ const CarsPage = () => {
 
     return (
         <div>
+            {authUser.is_superuser &&
             <Button onClick={() => navigate(ADMIN_ROUTE + "/" + CAR_CREATED)}>Додати автомобіль</Button>
+            }
             <div className={classes.cars__filters__block}>
                 <div className={classes.filters__block__left}>
                     <div>
@@ -242,7 +251,8 @@ const CarsPage = () => {
                 <Button icon={<RetweetOutlined />} size="large" onClick={resetFilterForm}>Cкинути</Button>
             </div>
             <Table
-                columns={columns(onDeleteCar, navigate)}
+                loading={isLoading}
+                columns={columns(onDeleteCar, navigate, authUser)}
                 dataSource={dataSource}
                 pagination={{
                     total: totalPages,
@@ -252,6 +262,7 @@ const CarsPage = () => {
                 onChange={handleTableChange}
             >
             </Table>
+            <RatingCarsRental/>
         </div>
     );
 };

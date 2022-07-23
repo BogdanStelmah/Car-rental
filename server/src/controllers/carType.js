@@ -2,6 +2,7 @@ const {queryParser} = require("../utils/queryParser");
 
 //Models
 const CarTypeModel = require('../models/CarType');
+const CarModel = require("../models/Car");
 
 exports.getCarTypes = async (req, res, next) => {
     try {
@@ -94,4 +95,37 @@ exports.putCarType = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-} 
+}
+
+exports.countCarsForCategory = async (req, res, next) => {
+    try {
+        const countCarsForCategory = await CarModel.aggregate([
+            {
+                $group: {
+                    _id: "$carType",
+                    count: {$count: {}}
+                }
+            },
+            { $sort: {count: -1} },
+            {
+                $lookup: {
+                    from: 'cartypes',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: '_id'
+                }
+            },
+        ])
+
+        countCarsForCategory.map((data) => {
+            return data._id = data._id[0].type;
+        })
+
+        res.status(200).json({
+            message: "Кількість автомобілів для кожної категорі, успішно отримано",
+            countCarsForCategory: countCarsForCategory
+        });
+    } catch (e) {
+        next(e);
+    }
+}
