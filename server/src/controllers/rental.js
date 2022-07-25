@@ -166,7 +166,6 @@ exports.getStatistics = async (req, res, next) => {
         const period = req.query.period || 'day';
         format = {'day': '%Y-%m-%d', 'month': '%Y-%m', 'year': '%Y'};
 
-
         const rentalsStatistics = await RentalModel
             .aggregate([
                 {

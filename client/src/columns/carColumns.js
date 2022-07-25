@@ -4,6 +4,12 @@ import React from "react";
 import {ADMIN_ROUTE} from "../components/utils/consts";
 import {Link} from "react-router-dom";
 
+const toUAH = new Intl.NumberFormat("ua", {
+    style: "currency",
+    currency: "UAH",
+    minimumFractionDigits: 0,
+})
+
 export const columns = (onDelete, navigate, authUser) => {
     const columns = [
         {
@@ -79,6 +85,9 @@ export const columns = (onDelete, navigate, authUser) => {
             dataIndex: 'price',
             width: 130,
             sorter: {multiple: 9},
+            render: (record => {
+                return toUAH.format(record);
+            })
         },
     ]
 

@@ -27,7 +27,7 @@ const DbToolsPage = () => {
         Modal.confirm({
             title: "Ви впевнені, що хочете зробити резервне копіювання бази даних?",
             okText: "Так",
-            okType: "danger",
+            okType: "ghost",
             cancelText: "Відміна",
             onOk: () => {
                 setIsClickButton(true)
@@ -46,7 +46,7 @@ const DbToolsPage = () => {
         Modal.confirm({
             title: "Ви впевнені, що хочете зробити відновлення бази даних?",
             okText: "Так",
-            okType: "danger",
+            okType: "ghost",
             cancelText: "Відміна",
             onOk: () => {
                 setIsClickButton(true)
