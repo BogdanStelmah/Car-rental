@@ -48,6 +48,7 @@ const UsersPage = () => {
 
     const search = () => {
         setIsLoading(true);
+        setParamTable({...paramTable, skip: 1})
         setParamSearch({[searchByField]: searchText, ['is_superuser']: valueIsSuperUser});
     }
 

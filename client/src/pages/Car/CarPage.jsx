@@ -127,7 +127,7 @@ const CarPage = () => {
                     </div>
                     }
                 </div>
-
+                {carReviews?.length !== 0 &&
                 <div className={classes.reviews__car}>
                     <h1>Відгуки</h1>
                     <div className={classes.reviews__list}>
@@ -141,6 +141,7 @@ const CarPage = () => {
                         )}
                     </div>
                 </div>
+                }
             </div>
             <Modal
                 title='Оформлення оренди'

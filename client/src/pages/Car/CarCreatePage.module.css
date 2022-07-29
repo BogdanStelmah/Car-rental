@@ -15,7 +15,7 @@
 }
 
 .car__info {
-    border: 2px solid #3f3f3f;
+    border: 2px solid rgba(63, 63, 63, 0.37);
     padding: 20px;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .reviews__car {
-    border: 2px solid #3f3f3f;
+    border: 2px solid rgba(63, 63, 63, 0.37);
     width: 1205px;
     margin: 10px 0 10px 0;
     padding: 10px;
@@ -48,7 +48,8 @@
 }
 
 .cars__filters__block {
-    border: 2px solid #3f3f3f;
+    /*border: 2px solid #3f3f3f;*/
+    background: #e3e3e3;
     padding: 10px;
     margin: 10px 0;
     display: flex;
@@ -56,7 +57,7 @@
 }
 .filters__block__left {
     width: 50%;
-    border-right: 2px solid #3f3f3f;
+    border-right: 2px solid rgba(63, 63, 63, 0.29);
     padding-right: 10px;
 }
 .filters__block__right {
@@ -78,7 +79,8 @@
     margin: 0 15px 15px 0;
     padding: 10px;
     width: content-box;
-    border: 2px solid rgba(63, 63, 63, 0.42);
+    /*border: 2px solid rgba(63, 63, 63, 0.42);*/
+    background: #e3e3e3;
 }
 .reviews__list {
     display: flex;

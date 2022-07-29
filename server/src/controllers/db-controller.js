@@ -3,6 +3,7 @@ const dbService = require('../service/db-service');
 
 exports.restore = async (req, res, next) => {
     try {
+        await dbService.deleteDB();
         await restoreMongoDB();
 
         res.status(200).json({

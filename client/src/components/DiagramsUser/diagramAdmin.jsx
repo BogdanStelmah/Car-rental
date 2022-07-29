@@ -20,6 +20,14 @@ const DiagramAdmin = () => {
         legend: {
             position: 'top-left',
         },
+        tooltip: {
+            fields: ['count'],
+        },
+        meta: {
+            count: {
+                alias: 'Кількість користувачів'
+            },
+        },
     };
 
     return (

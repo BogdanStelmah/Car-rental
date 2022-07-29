@@ -4,7 +4,7 @@ exports.queryParser = async (query, Model) => {
         const tableFields = await Model.getTableFields();
 
         // Pagination
-        let limit = Math.abs(parseInt(query.limit)) || 10;
+        let limit = Math.abs(parseInt(query.limit)) || 20;
         let skip = Math.abs(parseInt(query.skip)) || 1;
         skip = (skip - 1) * limit
         delete query.limit;

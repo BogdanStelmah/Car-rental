@@ -177,7 +177,7 @@ exports.topUsersForRentals = async (req, res, next) => {
         ])
 
         topUsers.map((data) => {
-            return data._id = data._id[0].email
+            return data._id = data._id[0]?.email || 'Видалений користувач'
         })
 
         res.status(200).json({

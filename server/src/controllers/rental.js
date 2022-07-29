@@ -3,6 +3,7 @@ const RentalModel = require('../models/Rental');
 const CarModel = require('../models/Car');
 const PassportDataModel = require('../models/PassportData');
 const CustomError = require("../exceptions/custom-error");
+var moment = require('moment');
 
 exports.getRentals = async (req, res, next) => {
     try {
@@ -164,7 +165,9 @@ exports.getStatistics = async (req, res, next) => {
         const { filters } = await queryParser(req.query, RentalModel);
 
         const period = req.query.period || 'day';
-        format = {'day': '%Y-%m-%d', 'month': '%Y-%m', 'year': '%Y'};
+
+        formatDateMongo = {'day': '%Y-%m-%d', 'month': '%Y-%m', 'year': '%Y'};
+        formatDateMoment = {'day': 'YYYY-MM-DD', 'month': 'YYYY-MM', 'year': 'YYYY'};
 
         const rentalsStatistics = await RentalModel
             .aggregate([
@@ -176,7 +179,7 @@ exports.getStatistics = async (req, res, next) => {
                         "paymentAmount": "$paymentAmount",
                         "createdAt": {
                             $dateToString: {
-                                "format": format[period],
+                                "format": formatDateMongo[period],
                                 "date": "$createdAt"
                             }
                         }
@@ -194,9 +197,31 @@ exports.getStatistics = async (req, res, next) => {
                 }
             ])
 
+        let days = new Set();
+        let start = new Date(rentalsStatistics[0]?._id);
+        let end = new Date(rentalsStatistics[rentalsStatistics.length - 1]?._id);
+
+        const dates = req.query?.createdAt?.split('to');
+        if (dates?.length === 2) {
+            start = new Date(dates[0]);
+            end = new Date(dates[1]);
+        }
+        for (let i = start; i <= end; i.setDate(i.getDate() + 1)) {
+            days.add(moment(i).format(formatDateMoment[period]))
+        }
+        days = Array.from(days).map((date) => {return {_id: date, amount: 0, count: 0}})
+
+        for (let i = 0; i < days.length; i++) {
+            for (let j = 0; j < rentalsStatistics.length; j++) {
+                if (days[i]._id === rentalsStatistics[j]?._id) {
+                    days[i] = rentalsStatistics[j];
+                }
+            }
+        }
+
         res.status(200).json({
             message: "Fetched statistic successfully.",
-            rentalsStatistics: rentalsStatistics,
+            rentalsStatistics: days,
         })
     } catch (e) {
         next(e);

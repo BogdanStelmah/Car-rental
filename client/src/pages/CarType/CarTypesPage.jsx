@@ -101,6 +101,7 @@ const CarTypesPage = () => {
             })
             .finally(() => {
                 setIsEdit(false);
+                setIsLoading(false);
             })
     }
 

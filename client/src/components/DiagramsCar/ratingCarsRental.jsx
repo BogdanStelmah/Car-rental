@@ -24,7 +24,7 @@ const RatingCarsRental = () => {
             fields: ['count'],
         },
         meta: {
-            _id: {
+            count: {
                 alias: 'Кількість оренд'
             },
         },

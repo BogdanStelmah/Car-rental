@@ -20,6 +20,14 @@ const TopUsers = () => {
         legend: {
             position: 'top-left',
         },
+        tooltip: {
+            fields: ['count'],
+        },
+        meta: {
+            count: {
+                alias: 'Кількість оформлень'
+            },
+        },
     };
 
     return (
